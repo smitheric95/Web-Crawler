@@ -20,33 +20,33 @@ import sys
 # https://s2.smu.edu/~fmoore/robots.txt
 
 class WebCrawler:
-    def __init__(self):
-        print("web crawler")
+    def __init__(self, seed_url):
+        self.seed_url = seed_url
+        self.url_frontier = [] # list of urls not yet visited
 
-    # Given a url for robots.txt, returns a dictionary of allowed and disallowed urls
-    # https://stackoverflow.com/a/43086135/8853372
-    def get_robots_txt(self, url):
-        try:
-            # open url
-            result = os.popen("curl " + url).read()
-            result_data_set = {"Disallowed": [], "Allowed": []}
+    # Returns a dictionary of allowed and disallowed urls
+    # Adapted from https://stackoverflow.com/a/43086135/8853372
+    def get_robots_txt(self):
+        # open seed url
+        result = urllib.request.urlopen(self.seed_url + "/robots.txt").read()
+        result_data_set = {"Disallowed": [], "Allowed": []}
 
-            # for reach line in the file
-            for line in result.split('\n'):
-                if line.startswith("Allow"):
-                    result_data_set["Allowed"].append(
-                        line.split(": ")[1].split(' ')[0])  # to neglect the comments or other junk info
-                elif line.startswith("Disallow"):  # this is for disallowed url
-                    result_data_set["Disallowed"].append(
-                        line.split(": ")[1].split(' ')[0])  # to neglect the comments or other junk info
+        # for reach line in the file
+        for line in result.decode("utf-8").split('\n'):
+            if line.startswith("Allow"):
+                result_data_set["Allowed"].append(
+                    line.split(": ")[1].split('\r')[0])  # to neglect the comments or other junk info
+            elif line.startswith("Disallow"):  # this is for disallowed url
+                result_data_set["Disallowed"].append(
+                    line.split(": ")[1].split('\r')[0])  # to neglect the comments or other junk info
 
-            return result_data_set
-
-        except Exception as e:
-            print(e)
+        return result_data_set
 
 if __name__ == "__main__":
-    print("running crawler")
     # print command line arguments
     for arg in sys.argv[1:]:
         print(arg)
+
+    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+    print(crawler.get_robots_txt())
+
