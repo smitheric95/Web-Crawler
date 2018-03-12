@@ -7,22 +7,25 @@ Web Crawler
 
 import urllib.request
 from bs4 import BeautifulSoup
-import os
 import sys
-
-# seed_url = "http://lyle.smu.edu/~fmoore"
-# handle = urllib.request.urlopen(seed_url)
-#
-# print(handle.read())
-# soup = BeautifulSoup(handle.read(), "lxml")
-#
-# print(soup)
-# https://s2.smu.edu/~fmoore/robots.txt
+import re
+import urllib.parse
 
 class WebCrawler:
     def __init__(self, seed_url):
         self.seed_url = seed_url
-        self.url_frontier = [] # list of urls not yet visited
+        self.url_frontier = []  # list of urls not yet visited
+        self.visited_urls = []
+        self.visited_urls_content = []  # hash of content of urls visited
+        self.outgoing_urls = []
+        self.broken_urls = []
+        self.graphic_urls = []
+        self.words = {}  # DocumentID, [words]
+
+    # print the report produced from crawling a site
+    def __str__(self):
+        report = ""
+        return report
 
     # Returns a dictionary of allowed and disallowed urls
     # Adapted from https://stackoverflow.com/a/43086135/8853372
@@ -42,11 +45,61 @@ class WebCrawler:
 
         return result_data_set
 
+    # returns whether or not a url is valid
+    # source: https://stackoverflow.com/a/7160778/8853372
+    def url_is_valid(self, url_string):
+        pattern = regex = re.compile(
+            r'^(?:http|ftp)s?://'  # http:// or https://
+            r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
+            r'localhost|'  # localhost...
+            r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
+            r'(?::\d+)?'  # optional port
+            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+
+        return bool(pattern.match(url_string))
+
+    def url_is_within_scope(self, url_string):
+        return "lyle.smu.edu/~fmoore" in url_string
+
+    # crawls a site and returns a dictionary of information found
+    def crawl(self):
+        # dictionary containing information about the site
+
+        robots_txt = self.get_robots_txt()
+
+        handle = urllib.request.urlopen(self.seed_url)
+        pwd = self.seed_url + "/" # present working directory
+
+        soup = BeautifulSoup(handle.read(), "lxml")
+
+        for link in soup.find_all('a'):
+            print(link)
+            current_url = link.get('href')
+
+            # expand the url to include the domain
+            if pwd not in current_url:
+                current_url = urllib.parse.urljoin(pwd, current_url)  # only works if the resulting url is valid
+
+            # the url should be visited
+            if self.url_is_valid(current_url):
+                # the url is within scope and hasn't been added to the queue
+                if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
+                    # hasn't been visited
+                    if current_url not in self.visited_urls:
+                        self.url_frontier.append(current_url)
+                else:
+                    self.outgoing_urls.append(current_url)
+            else:
+                self.broken_urls.append(current_url)
+
+
+        print("done crawling")
+
 if __name__ == "__main__":
     # print command line arguments
     for arg in sys.argv[1:]:
         print(arg)
 
     crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
-    print(crawler.get_robots_txt())
-
+    crawler.crawl()
+    print(crawler)
