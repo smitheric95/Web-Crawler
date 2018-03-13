@@ -127,7 +127,7 @@ class WebCrawler:
                     soup = BeautifulSoup(handle.read(), "lxml")
 
                     # hash the content of the page to produce a unique DocumentID
-                    current_content = hashlib.sha224(str(soup).encode("utf-8")).hexdigest()
+                    current_content = hashlib.sha256(str(soup).encode("utf-8")).hexdigest()
 
                     # grab the title of the page, store file name if title isn't available (e.g. PDF file)
                     current_title = soup.title.text if soup.title is not None else current_page.replace(pwd, '')
