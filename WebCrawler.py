@@ -12,12 +12,13 @@ import re
 import urllib.parse
 from furl import furl
 
+
 class WebCrawler:
     def __init__(self, seed_url):
         self.seed_url = seed_url
         self.robots_txt = None
         self.url_frontier = []  # list of urls not yet visited
-        self.visited_urls = []
+        self.visited_urls = {}
         self.visited_urls_content = []  # hash of content of urls visited
         self.outgoing_urls = []
         self.broken_urls = []
@@ -27,13 +28,13 @@ class WebCrawler:
     # print the report produced from crawling a site
     def __str__(self):
         report = " seed_url: " + self.seed_url \
-        + "\n\n robots_txt: " + "[" + " ".join(self.robots_txt) \
-        + "\n\n url_frontier: " + "[" + " ".join(self.url_frontier) \
-        + "\n\n visited_urls: " + "[" + " ".join(self.visited_urls) \
-        + "\n\n outgoing_urls: " + "[" + " ".join(self.outgoing_urls) \
-        + "\n\n broken_urls: " + "[" + " ".join(self.broken_urls) \
-        + "\n\n graphic_urls: " + "[" + " ".join(self.graphic_urls) \
-        # + "\n\n words: " +  "[" + " ".join(self.words)
+                 + "\n\n robots_txt: " + "[" + ''.join('{}{}'.format(key, val) for key, val in self.robots_txt.items()) \
+                 + "\n\n url_frontier: " + "[" + " ".join(self.url_frontier) \
+                 + "\n\n visited_urls: " + "[" + " ".join(self.visited_urls) \
+                 + "\n\n outgoing_urls: " + "[" + " ".join(self.outgoing_urls) \
+                 + "\n\n broken_urls: " + "[" + " ".join(self.broken_urls) \
+                 + "\n\n graphic_urls: " + "[" + " ".join(self.graphic_urls) \
+            # + "\n\n words: " +  "[" + " ".join(self.words)
 
         return report
 
@@ -48,10 +49,12 @@ class WebCrawler:
         for line in result.decode("utf-8").split('\n'):
             if line.startswith("Allow"):
                 result_data_set["Allowed"].append(
-                    self.seed_url + line.split(": ")[1].split('\r')[0])  # to neglect the comments or other junk info
+                    self.seed_url + line.split(": ")[1].split('\r')[0]
+                )  # to neglect the comments or other junk info
             elif line.startswith("Disallow"):  # this is for disallowed url
                 result_data_set["Disallowed"].append(
-                    self.seed_url + line.split(": ")[1].split('\r')[0])  # to neglect the comments or other junk info
+                    self.seed_url + line.split(": ")[1].split('\r')[0]
+                )  # to neglect the comments or other junk info
 
         return result_data_set
 
@@ -64,7 +67,8 @@ class WebCrawler:
             r'localhost|'  # localhost...
             r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
             r'(?::\d+)?'  # optional port
-            r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+            r'(?:/?|[/?]\S+)$',
+            re.IGNORECASE)
 
         return bool(pattern.match(url_string))
 
@@ -98,11 +102,17 @@ class WebCrawler:
                     if current_page not in self.broken_urls:
                         self.broken_urls.append(current_page)
                 else:
-                    # mark that the page has been visited
-                    self.visited_urls.append(current_page)
-
+                    # convert url to BeautifulSoup
                     soup = BeautifulSoup(handle.read(), "lxml")
-                    print("visiting: " + current_page)
+
+                    # mark that the page has been visited
+                    if soup.title is not None:
+                        self.visited_urls[current_page] = soup.title.text  # store both it's url and page title
+                        print("visiting: " + current_page + " (" + str(soup.title.text) + ")")
+
+                    else:  # store file name if title isn't available
+                        self.visited_urls[current_page] = current_page.replace(pwd, '')
+                        print("visiting: " + current_page + " (" + current_page.replace(pwd, '') + ")")
 
                     for link in soup.find_all('a'):
                         # current_url refers to the current link within the current page being processed
@@ -115,11 +125,14 @@ class WebCrawler:
 
                         # the link should be visited
                         if self.url_is_valid(current_url):
+
                             # the link is within scope and hasn't been added to the queue
                             if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
-                                # hasn't been visited
-                                if current_url not in self.visited_urls:
+
+                                # ensure the hasn't been visited before adding it to the queue
+                                if current_url not in self.visited_urls.keys():
                                     self.url_frontier.append(current_url)
+
                             elif not self.url_is_within_scope(current_url):
                                 self.outgoing_urls.append(current_url)
 
@@ -130,6 +143,7 @@ class WebCrawler:
             else:
                 print("not allowed: " + current_page)
         print("done crawling")
+
 
 if __name__ == "__main__":
     # print command line arguments
