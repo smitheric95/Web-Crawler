@@ -68,7 +68,7 @@ class WebCrawler:
 
         robots_txt = self.get_robots_txt()
 
-        self.url_frontier.append(self.seed_url)
+        self.url_frontier.append(self.seed_url + "/")
 
         # while the queue is not empty
         # links in queue are valid, full urls
@@ -80,7 +80,7 @@ class WebCrawler:
             # calculate present working directory
             pwd = "/".join(current_page.split("/")[:-1]) + "/"
 
-            handle = urllib.request.urlopen(self.current_page)
+            handle = urllib.request.urlopen(current_page)
             soup = BeautifulSoup(handle.read(), "lxml")
 
             for link in soup.find_all('a'):
