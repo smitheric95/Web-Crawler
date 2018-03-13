@@ -17,8 +17,8 @@ class WebCrawler:
         self.seed_url = seed_url
         self.robots_txt = None
         self.url_frontier = []  # list of urls not yet visited
-        self.visited_urls = {}  # URL : [Title, DocumentID] (hash of content of a visited URL)
-        self.duplicate_urls = {}    # DocumentID : URLs that produce that ID
+        self.visited_urls = {}  # URL : (Title, DocumentID) (hash of content of a visited URL)
+        self.duplicate_urls = {}    # DocumentID : [URLs that produce that ID]
         self.outgoing_urls = []
         self.broken_urls = []
         self.graphic_urls = []
@@ -71,8 +71,23 @@ class WebCrawler:
 
         return bool(pattern.match(url_string))
 
+    # returns whether or not the url is within the scope of the seed url
     def url_is_within_scope(self, url_string):
-        return "lyle.smu.edu/~fmoore" in url_string
+        return self.seed_url in url_string
+
+    '''
+    produces a list of duplicate documents
+    populates self.duplicate_urls with DocumentID : [URLs that produce that ID]
+    '''
+    def produce_duplicates(self):
+        # self.visited_urls = {}  # URL : (Title, DocumentID) (hash of content of a visited URL)
+        duplicates = {}
+
+        # populate duplicates with DocumentID : [URLs]
+        for url, (title, docID) in self.visited_urls:
+            duplicates[url] = docID
+
+        return duplicates
 
     # crawls a site and returns a dictionary of information found
     def crawl(self):
@@ -82,8 +97,10 @@ class WebCrawler:
 
         self.url_frontier.append(self.seed_url + "/")
 
-        # while the queue is not empty
-        # links in queue are valid, full urls
+        '''
+        pop from the URL frontier while the queue is not empty
+        links in queue are valid, full urls
+        '''
         while self.url_frontier:
             # current_page refers to the url of the current page being processed
             current_page = self.url_frontier.pop()  # select the next url
@@ -111,11 +128,12 @@ class WebCrawler:
                     current_title = soup.title.text if soup.title is not None else current_page.replace(pwd, '')
 
                     # mark that the page has been visited by adding to visited_url
-                    self.visited_urls[current_page] = [current_title, current_content]
+                    self.visited_urls[current_page] = (current_title, current_content)
 
                     print("visiting: " + current_page + " (" + current_title + ")")
 
                     for link in soup.find_all('a'):
+
                         # current_url refers to the current link within the current page being processed
                         current_url = link.get('href')
 
@@ -154,5 +172,5 @@ if __name__ == "__main__":
     crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
     crawler.crawl()
     print(crawler)
-
+    duplicates = crawler.produce_duplicates()
     print("done")
