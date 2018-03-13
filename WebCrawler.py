@@ -10,6 +10,7 @@ from bs4 import BeautifulSoup
 import sys
 import re
 import urllib.parse
+from furl import furl
 
 class WebCrawler:
     def __init__(self, seed_url):
@@ -67,33 +68,41 @@ class WebCrawler:
 
         robots_txt = self.get_robots_txt()
 
-        handle = urllib.request.urlopen(self.seed_url)
-        pwd = self.seed_url + "/" # present working directory
+        self.url_frontier.append(self.seed_url)
 
-        soup = BeautifulSoup(handle.read(), "lxml")
+        # while the queue is not empty
+        # links in queue are valid, full urls
+        while self.url_frontier:
+            current_url = self.url_frontier.pop()  # select the next url
+            self.visited_urls.append(current_url)
 
-        for link in soup.find_all('a'):
-            print(link)
-            current_url = link.get('href')
+            # calculate present working directory
+            pwd = "/".join(current_url.split("/")[:-1]) + "/"
 
-            # expand the url to include the domain
-            if pwd not in current_url:
-                current_url = urllib.parse.urljoin(pwd, current_url)  # only works if the resulting url is valid
+            handle = urllib.request.urlopen(self.seed_url)
+            soup = BeautifulSoup(handle.read(), "lxml")
 
-            # the url should be visited
-            if self.url_is_valid(current_url):
-                # the url is within scope and hasn't been added to the queue
-                if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
-                    # hasn't been visited
-                    if current_url not in self.visited_urls:
-                        self.url_frontier.append(current_url)
+            for link in soup.find_all('a'):
+                current_url = link.get('href')
+
+                # expand the url to include the domain
+                if pwd not in current_url:
+                    current_url = urllib.parse.urljoin(pwd, current_url)  # only works if the resulting url is valid
+
+                # the url should be visited
+                if self.url_is_valid(current_url):
+                    # the url is within scope and hasn't been added to the queue
+                    if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
+                        # hasn't been visited
+                        if current_url not in self.visited_urls:
+                            self.url_frontier.append(current_url)
+                    else:
+                        self.outgoing_urls.append(current_url)
+                # the url is broken
                 else:
-                    self.outgoing_urls.append(current_url)
-            else:
-                self.broken_urls.append(current_url)
+                    self.broken_urls.append(current_url)
 
-
-        print("done crawling")
+        print(self.visited_urls)
 
 if __name__ == "__main__":
     # print command line arguments
