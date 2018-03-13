@@ -11,6 +11,7 @@ import sys
 import re
 import urllib.parse
 import hashlib
+import pickle
 
 class WebCrawler:
     def __init__(self, seed_url):
@@ -37,8 +38,10 @@ class WebCrawler:
 
         return report
 
-    # Returns a dictionary of allowed and disallowed urls
-    # Adapted from https://stackoverflow.com/a/43086135/8853372
+    '''
+    Returns a dictionary of allowed and disallowed urls
+    Adapted from https://stackoverflow.com/a/43086135/8853372
+    '''
     def get_robots_txt(self):
         # open seed url
         result = urllib.request.urlopen(self.seed_url + "/robots.txt").read()
@@ -57,8 +60,10 @@ class WebCrawler:
 
         return result_data_set
 
-    # returns whether or not a url is valid
-    # source: https://stackoverflow.com/a/7160778/8853372
+    '''
+    returns whether or not a url is valid
+    ource: https://stackoverflow.com/a/7160778/8853372
+    '''
     def url_is_valid(self, url_string):
         pattern = regex = re.compile(
             r'^(?:http|ftp)s?://'  # http:// or https://
@@ -80,14 +85,14 @@ class WebCrawler:
     populates self.duplicate_urls with DocumentID : [URLs that produce that ID]
     '''
     def produce_duplicates(self):
-        # self.visited_urls = {}  # URL : (Title, DocumentID) (hash of content of a visited URL)
         duplicates = {}
 
         # populate duplicates with DocumentID : [URLs]
-        for url, (title, docID) in self.visited_urls:
-            duplicates[url] = docID
+        for url, (_, docID) in self.visited_urls.items():
+            duplicates[docID] = [url] if duplicates.get(docID) is None else duplicates[docID] + [url]
 
-        return duplicates
+        # set duplicate_urls to those instances that have only one URL
+        self.duplicate_urls = {docID: urls for docID, urls in duplicates.items() if len(urls) > 1}
 
     # crawls a site and returns a dictionary of information found
     def crawl(self):
@@ -122,7 +127,7 @@ class WebCrawler:
                     soup = BeautifulSoup(handle.read(), "lxml")
 
                     # hash the content of the page to produce a unique DocumentID
-                    current_content = hashlib.sha224(soup.contents[0].text.encode('utf-8')).hexdigest()
+                    current_content = hashlib.sha224(str(soup).encode("utf-8")).hexdigest()
 
                     # grab the title of the page, store file name if title isn't available (e.g. PDF file)
                     current_title = soup.title.text if soup.title is not None else current_page.replace(pwd, '')
@@ -150,9 +155,10 @@ class WebCrawler:
 
                                 # ensure the hasn't been visited before adding it to the queue
                                 if current_url not in self.visited_urls.keys():
+                                    # print("DEBUG MODE - NO URLS ADDED TO FRONTIER")
                                     self.url_frontier.append(current_url)
 
-                            elif not self.url_is_within_scope(current_url):
+                            elif not self.url_is_within_scope(current_url) and current_url not in self.outgoing_urls:
                                 self.outgoing_urls.append(current_url)
 
                         # the link is broken
@@ -169,8 +175,18 @@ if __name__ == "__main__":
     for arg in sys.argv[1:]:
         print(arg)
 
-    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
-    crawler.crawl()
-    print(crawler)
-    duplicates = crawler.produce_duplicates()
+    # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+    # crawler.crawl()
+
+    # export cralwer to file
+    # f = open("crawler.obj", 'wb')
+    # pickle.dump(crawler, f)
+    # f.close()
+
+    f = open("crawler.obj", "rb")
+    crawler = pickle.load(f)
+    crawler.produce_duplicates()
+
+
+
     print("done")

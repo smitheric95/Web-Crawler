@@ -6,6 +6,7 @@ note: may need to run /Applications/Python\ 3.6/Install\ Certificates.command
 TODO:
 - write report
 - take user input of num pages and stop words
+- bash script to install requirements
 - finish crawler
 
 
