@@ -18,7 +18,6 @@ class WebCrawler:
         self.robots_txt = None
         self.url_frontier = []  # list of urls not yet visited
         self.visited_urls = {}  # URL : [Title, DocumentID] (hash of content of a visited URL)
-        # self.visited_urls_content = []  # DocumentIDs
         self.duplicate_urls = {}    # DocumentID : URLs that produce that ID
         self.outgoing_urls = []
         self.broken_urls = []
@@ -106,7 +105,7 @@ class WebCrawler:
                     soup = BeautifulSoup(handle.read(), "lxml")
 
                     # hash the content of the page to produce a unique DocumentID
-                    current_content = hashlib.sha224(soup).hexdigest()
+                    current_content = hashlib.sha224(soup.contents[0].text.encode('utf-8')).hexdigest()
 
                     # grab the title of the page, store file name if title isn't available (e.g. PDF file)
                     current_title = soup.title.text if soup.title is not None else current_page.replace(pwd, '')
