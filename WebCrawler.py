@@ -29,11 +29,11 @@ class WebCrawler:
     def __str__(self):
         report = " seed_url: " + self.seed_url \
                  + "\n\n robots_txt: " + "[" + ''.join('{}{}'.format(key, val) for key, val in self.robots_txt.items()) \
-                 + "\n\n url_frontier: " + "[" + " ".join(self.url_frontier) \
-                 + "\n\n visited_urls: " + "[" + " ".join(self.visited_urls) \
-                 + "\n\n outgoing_urls: " + "[" + " ".join(self.outgoing_urls) \
-                 + "\n\n broken_urls: " + "[" + " ".join(self.broken_urls) \
-                 + "\n\n graphic_urls: " + "[" + " ".join(self.graphic_urls) \
+                 + "\n\n url_frontier: " + "[" + " ".join(self.url_frontier) + "]" \
+                 + "\n\n visited_urls: " + str(self.visited_urls) \
+                 + "\n\n outgoing_urls: " + "[" + " ".join(self.outgoing_urls) + "]" \
+                 + "\n\n broken_urls: " + "[" + " ".join(self.broken_urls) + "]" \
+                 + "\n\n graphic_urls: " + "[" + " ".join(self.graphic_urls) + "]" \
             # + "\n\n words: " +  "[" + " ".join(self.words)
 
         return report
@@ -131,7 +131,8 @@ class WebCrawler:
 
                                 # ensure the hasn't been visited before adding it to the queue
                                 if current_url not in self.visited_urls.keys():
-                                    self.url_frontier.append(current_url)
+                                    # self.url_frontier.append(current_url)
+                                    print("DEV MODE - NO URLS ADDED TO FRONTIER")
 
                             elif not self.url_is_within_scope(current_url):
                                 self.outgoing_urls.append(current_url)
@@ -153,3 +154,5 @@ if __name__ == "__main__":
     crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
     crawler.crawl()
     print(crawler)
+
+    print("done")
