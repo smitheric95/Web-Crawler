@@ -73,36 +73,38 @@ class WebCrawler:
         # while the queue is not empty
         # links in queue are valid, full urls
         while self.url_frontier:
-            current_url = self.url_frontier.pop()  # select the next url
-            self.visited_urls.append(current_url)
+            # current_page refers to the url of the current page being processed
+            current_page = self.url_frontier.pop()  # select the next url
+            self.visited_urls.append(current_page)
 
             # calculate present working directory
-            pwd = "/".join(current_url.split("/")[:-1]) + "/"
+            pwd = "/".join(current_page.split("/")[:-1]) + "/"
 
-            handle = urllib.request.urlopen(self.seed_url)
+            handle = urllib.request.urlopen(self.current_page)
             soup = BeautifulSoup(handle.read(), "lxml")
 
             for link in soup.find_all('a'):
+                # current_url refers to the current link within the current page being processed
                 current_url = link.get('href')
 
                 # expand the url to include the domain
                 if pwd not in current_url:
-                    current_url = urllib.parse.urljoin(pwd, current_url)  # only works if the resulting url is valid
+                    current_url = urllib.parse.urljoin(pwd, current_url)  # only works if the resulting link is valid
 
-                # the url should be visited
+                # the link should be visited
                 if self.url_is_valid(current_url):
-                    # the url is within scope and hasn't been added to the queue
+                    # the link is within scope and hasn't been added to the queue
                     if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
                         # hasn't been visited
                         if current_url not in self.visited_urls:
                             self.url_frontier.append(current_url)
-                    else:
+                    elif not self.url_is_within_scope(current_url):
                         self.outgoing_urls.append(current_url)
-                # the url is broken
-                else:
+                # the link is broken
+                elif current_url not in self.broken_urls:
                     self.broken_urls.append(current_url)
 
-        print(self.visited_urls)
+            break
 
 if __name__ == "__main__":
     # print command line arguments
