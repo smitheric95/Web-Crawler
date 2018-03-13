@@ -10,20 +10,20 @@ from bs4 import BeautifulSoup
 import sys
 import re
 import urllib.parse
-from furl import furl
-
+import hashlib
 
 class WebCrawler:
     def __init__(self, seed_url):
         self.seed_url = seed_url
         self.robots_txt = None
         self.url_frontier = []  # list of urls not yet visited
-        self.visited_urls = {}
-        self.visited_urls_content = []  # hash of content of urls visited
+        self.visited_urls = {}  # URL : [Title, DocumentID] (hash of content of a visited URL)
+        # self.visited_urls_content = []  # DocumentIDs
+        self.duplicate_urls = {}    # DocumentID : URLs that produce that ID
         self.outgoing_urls = []
         self.broken_urls = []
         self.graphic_urls = []
-        self.words = {}  # DocumentID, [words]
+        self.words = {}  # DocumentID : [words]
 
     # print the report produced from crawling a site
     def __str__(self):
@@ -105,14 +105,16 @@ class WebCrawler:
                     # convert url to BeautifulSoup
                     soup = BeautifulSoup(handle.read(), "lxml")
 
-                    # mark that the page has been visited
-                    if soup.title is not None:
-                        self.visited_urls[current_page] = soup.title.text  # store both it's url and page title
-                        print("visiting: " + current_page + " (" + str(soup.title.text) + ")")
+                    # hash the content of the page to produce a unique DocumentID
+                    current_content = hashlib.sha224(soup).hexdigest()
 
-                    else:  # store file name if title isn't available
-                        self.visited_urls[current_page] = current_page.replace(pwd, '')
-                        print("visiting: " + current_page + " (" + current_page.replace(pwd, '') + ")")
+                    # grab the title of the page, store file name if title isn't available (e.g. PDF file)
+                    current_title = soup.title.text if soup.title is not None else current_page.replace(pwd, '')
+
+                    # mark that the page has been visited by adding to visited_url
+                    self.visited_urls[current_page] = [current_title, current_content]
+
+                    print("visiting: " + current_page + " (" + current_title + ")")
 
                     for link in soup.find_all('a'):
                         # current_url refers to the current link within the current page being processed
@@ -131,8 +133,7 @@ class WebCrawler:
 
                                 # ensure the hasn't been visited before adding it to the queue
                                 if current_url not in self.visited_urls.keys():
-                                    # self.url_frontier.append(current_url)
-                                    print("DEV MODE - NO URLS ADDED TO FRONTIER")
+                                    self.url_frontier.append(current_url)
 
                             elif not self.url_is_within_scope(current_url):
                                 self.outgoing_urls.append(current_url)
