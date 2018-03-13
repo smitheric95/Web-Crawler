@@ -26,15 +26,14 @@ class WebCrawler:
 
     # print the report produced from crawling a site
     def __str__(self):
-        report = " seed_url: " + self.seed_url
-        + "\n\n robots_txt: " + self.robots_txt
-        + "\n\n url_frontier: " + self.url_frontier
-        + "\n\n visited_urls: " + self.visited_urls
-        + "\n\n visited_urls: " + self.visited_urls
-        + "\n\n outgoing_urls: " + self.outgoing_urls
-        + "\n\n broken_urls: " + self.broken_urls
-        + "\n\n graphic_urls: " + self.graphic_urls
-        + "\n\n words: " + self.words
+        report = " seed_url: " + self.seed_url \
+        + "\n\n robots_txt: " + "[" + " ".join(self.robots_txt) \
+        + "\n\n url_frontier: " + "[" + " ".join(self.url_frontier) \
+        + "\n\n visited_urls: " + "[" + " ".join(self.visited_urls) \
+        + "\n\n outgoing_urls: " + "[" + " ".join(self.outgoing_urls) \
+        + "\n\n broken_urls: " + "[" + " ".join(self.broken_urls) \
+        + "\n\n graphic_urls: " + "[" + " ".join(self.graphic_urls) \
+        # + "\n\n words: " +  "[" + " ".join(self.words)
 
         return report
 
@@ -85,7 +84,6 @@ class WebCrawler:
         while self.url_frontier:
             # current_page refers to the url of the current page being processed
             current_page = self.url_frontier.pop()  # select the next url
-            self.visited_urls.append(current_page)
 
             # calculate present working directory
             pwd = "/".join(current_page.split("/")[:-1]) + "/"
@@ -97,8 +95,12 @@ class WebCrawler:
 
                 # basic HTTP error e.g. 404, 501, etc
                 except urllib.error.HTTPError as e:
-                    self.broken_urls.append(current_page)
+                    if current_page not in self.broken_urls:
+                        self.broken_urls.append(current_page)
                 else:
+                    # mark that the page has been visited
+                    self.visited_urls.append(current_page)
+
                     soup = BeautifulSoup(handle.read(), "lxml")
                     print("visiting: " + current_page)
 
