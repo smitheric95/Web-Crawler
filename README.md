@@ -21,7 +21,7 @@ crawler:
 	- case insensitive matching
 	- assign unique id to each doc
 - 20 most common words
-
+- ensure that only links in robots.txt are visited
 
 data structure:
 

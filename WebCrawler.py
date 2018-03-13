@@ -15,6 +15,7 @@ from furl import furl
 class WebCrawler:
     def __init__(self, seed_url):
         self.seed_url = seed_url
+        self.robots_txt = None
         self.url_frontier = []  # list of urls not yet visited
         self.visited_urls = []
         self.visited_urls_content = []  # hash of content of urls visited
@@ -25,7 +26,16 @@ class WebCrawler:
 
     # print the report produced from crawling a site
     def __str__(self):
-        report = ""
+        report = " seed_url: " + self.seed_url
+        + "\n\n robots_txt: " + self.robots_txt
+        + "\n\n url_frontier: " + self.url_frontier
+        + "\n\n visited_urls: " + self.visited_urls
+        + "\n\n visited_urls: " + self.visited_urls
+        + "\n\n outgoing_urls: " + self.outgoing_urls
+        + "\n\n broken_urls: " + self.broken_urls
+        + "\n\n graphic_urls: " + self.graphic_urls
+        + "\n\n words: " + self.words
+
         return report
 
     # Returns a dictionary of allowed and disallowed urls
@@ -39,10 +49,10 @@ class WebCrawler:
         for line in result.decode("utf-8").split('\n'):
             if line.startswith("Allow"):
                 result_data_set["Allowed"].append(
-                    line.split(": ")[1].split('\r')[0])  # to neglect the comments or other junk info
+                    self.seed_url + line.split(": ")[1].split('\r')[0])  # to neglect the comments or other junk info
             elif line.startswith("Disallow"):  # this is for disallowed url
                 result_data_set["Disallowed"].append(
-                    line.split(": ")[1].split('\r')[0])  # to neglect the comments or other junk info
+                    self.seed_url + line.split(": ")[1].split('\r')[0])  # to neglect the comments or other junk info
 
         return result_data_set
 
@@ -66,7 +76,7 @@ class WebCrawler:
     def crawl(self):
         # dictionary containing information about the site
 
-        robots_txt = self.get_robots_txt()
+        self.robots_txt = self.get_robots_txt()
 
         self.url_frontier.append(self.seed_url + "/")
 
@@ -80,31 +90,44 @@ class WebCrawler:
             # calculate present working directory
             pwd = "/".join(current_page.split("/")[:-1]) + "/"
 
-            handle = urllib.request.urlopen(current_page)
-            soup = BeautifulSoup(handle.read(), "lxml")
+            if pwd not in self.robots_txt["Disallowed"]:
+                try:
+                    # hit the current page
+                    handle = urllib.request.urlopen(current_page)
 
-            for link in soup.find_all('a'):
-                # current_url refers to the current link within the current page being processed
-                current_url = link.get('href')
+                # basic HTTP error e.g. 404, 501, etc
+                except urllib.error.HTTPError as e:
+                    self.broken_urls.append(current_page)
+                else:
+                    soup = BeautifulSoup(handle.read(), "lxml")
+                    print("visiting: " + current_page)
 
-                # expand the url to include the domain
-                if pwd not in current_url:
-                    current_url = urllib.parse.urljoin(pwd, current_url)  # only works if the resulting link is valid
+                    for link in soup.find_all('a'):
+                        # current_url refers to the current link within the current page being processed
+                        current_url = link.get('href')
 
-                # the link should be visited
-                if self.url_is_valid(current_url):
-                    # the link is within scope and hasn't been added to the queue
-                    if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
-                        # hasn't been visited
-                        if current_url not in self.visited_urls:
-                            self.url_frontier.append(current_url)
-                    elif not self.url_is_within_scope(current_url):
-                        self.outgoing_urls.append(current_url)
-                # the link is broken
-                elif current_url not in self.broken_urls:
-                    self.broken_urls.append(current_url)
+                        # expand the url to include the domain
+                        if pwd not in current_url:
+                            # only works if the resulting link is valid
+                            current_url = urllib.parse.urljoin(pwd, current_url)
 
-            break
+                        # the link should be visited
+                        if self.url_is_valid(current_url):
+                            # the link is within scope and hasn't been added to the queue
+                            if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
+                                # hasn't been visited
+                                if current_url not in self.visited_urls:
+                                    self.url_frontier.append(current_url)
+                            elif not self.url_is_within_scope(current_url):
+                                self.outgoing_urls.append(current_url)
+
+                        # the link is broken
+                        elif current_url not in self.broken_urls:
+                            self.broken_urls.append(current_url)
+
+            else:
+                print("not allowed: " + current_page)
+        print("done crawling")
 
 if __name__ == "__main__":
     # print command line arguments
