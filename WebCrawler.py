@@ -62,7 +62,7 @@ class WebCrawler:
 
     '''
     returns whether or not a url is valid
-    ource: https://stackoverflow.com/a/7160778/8853372
+    source: https://stackoverflow.com/a/7160778/8853372
     '''
     def url_is_valid(self, url_string):
         pattern = regex = re.compile(
@@ -129,10 +129,10 @@ class WebCrawler:
                     soup = BeautifulSoup(current_content, "lxml")
 
                     # grab the title of the page, store file name if title isn't available (e.g. PDF file)
-                    current_title = soup.title.string if soup.title is not None else current_page.replace(pwd, '')
+                    current_title = str(soup.title.string) if soup.title is not None else current_page.replace(pwd, '')
 
                     # hash the content of the page to produce a unique DocumentID
-                    current_content = hashlib.sha256(str(current_content).encode("utf-8")).hexdigest()
+                    current_content = hashlib.sha256(current_content.encode("utf-8")).hexdigest()
 
                     # mark that the page has been visited by adding to visited_url
                     self.visited_urls[current_page] = (current_title, current_content)
@@ -180,18 +180,17 @@ if __name__ == "__main__":
     for arg in sys.argv[1:]:
         print(arg)
 
-    # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
-    # crawler.crawl()
-
-    # export cralwer to file
-    # f = open("crawler_2.obj", 'wb')
-    # pickle.dump(crawler, f)
-    # f.close()
-
-    f = open("crawler.obj", "rb")
-    crawler = pickle.load(f) # crawler.crawl()
+    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+    crawler.crawl()
     crawler.produce_duplicates()
 
+    # export crawler to file
+    f = open("crawler.obj", 'wb')
+    pickle.dump(crawler, f)
+    f.close()
 
+    # f = open("crawler.obj", "rb")
+    # crawler = pickle.load(f) # crawler.crawl()
+    # f.close()
 
     print("done")
