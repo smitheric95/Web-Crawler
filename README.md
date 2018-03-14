@@ -1,4 +1,4 @@
-# Web-Crawler
+#Web-Crawler
 
 note: may need to run /Applications/Python\ 3.6/Install\ Certificates.command
 	also: pip install furl
@@ -8,6 +8,7 @@ TODO:
 - take user input of num pages and stop words
 - bash script to install requirements
 - finish crawler
+- how to handle spreadsheets and pdfs?
 
 
 

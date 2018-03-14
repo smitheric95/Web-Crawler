@@ -123,47 +123,52 @@ class WebCrawler:
                     if current_page not in self.broken_urls:
                         self.broken_urls.append(current_page)
                 else:
-                    # convert url to BeautifulSoup
-                    soup = BeautifulSoup(handle.read(), "lxml")
+                    current_content = str(handle.read())
 
-                    # hash the content of the page to produce a unique DocumentID
-                    current_content = hashlib.sha256(str(soup).encode("utf-8")).hexdigest()
+                    # convert content to BeautifulSoup for easy html parsing
+                    soup = BeautifulSoup(current_content, "lxml")
 
                     # grab the title of the page, store file name if title isn't available (e.g. PDF file)
-                    current_title = soup.title.text if soup.title is not None else current_page.replace(pwd, '')
+                    current_title = soup.title.string if soup.title is not None else current_page.replace(pwd, '')
+
+                    # hash the content of the page to produce a unique DocumentID
+                    current_content = hashlib.sha256(str(current_content).encode("utf-8")).hexdigest()
 
                     # mark that the page has been visited by adding to visited_url
                     self.visited_urls[current_page] = (current_title, current_content)
 
                     print("visiting: " + current_page + " (" + current_title + ")")
 
-                    for link in soup.find_all('a'):
+                    # if the page is an html document, we need to parse it for links
+                    if current_page.endswith(".html") or current_page.endswith(".htm") or current_page.endswith("/"):
 
-                        # current_url refers to the current link within the current page being processed
-                        current_url = link.get('href')
+                        for link in soup.find_all('a'):
 
-                        # expand the url to include the domain
-                        if pwd not in current_url:
-                            # only works if the resulting link is valid
-                            current_url = urllib.parse.urljoin(pwd, current_url)
+                            # current_url refers to the current link within the current page being processed
+                            current_url = link.get('href')
 
-                        # the link should be visited
-                        if self.url_is_valid(current_url):
+                            # expand the url to include the domain
+                            if pwd not in current_url:
+                                # only works if the resulting link is valid
+                                current_url = urllib.parse.urljoin(pwd, current_url)
 
-                            # the link is within scope and hasn't been added to the queue
-                            if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
+                            # the link should be visited
+                            if self.url_is_valid(current_url):
 
-                                # ensure the hasn't been visited before adding it to the queue
-                                if current_url not in self.visited_urls.keys():
-                                    # print("DEBUG MODE - NO URLS ADDED TO FRONTIER")
-                                    self.url_frontier.append(current_url)
+                                # the link is within scope and hasn't been added to the queue
+                                if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
 
-                            elif not self.url_is_within_scope(current_url) and current_url not in self.outgoing_urls:
-                                self.outgoing_urls.append(current_url)
+                                    # ensure the hasn't been visited before adding it to the queue
+                                    if current_url not in self.visited_urls.keys():
+                                        # print("DEBUG MODE - NO URLS ADDED TO FRONTIER")
+                                        self.url_frontier.append(current_url)
 
-                        # the link is broken
-                        elif current_url not in self.broken_urls:
-                            self.broken_urls.append(current_url)
+                                elif not self.url_is_within_scope(current_url) and current_url not in self.outgoing_urls:
+                                    self.outgoing_urls.append(current_url)
+
+                            # the link is broken
+                            elif current_url not in self.broken_urls:
+                                self.broken_urls.append(current_url)
 
             else:
                 print("not allowed: " + current_page)
@@ -179,12 +184,12 @@ if __name__ == "__main__":
     # crawler.crawl()
 
     # export cralwer to file
-    # f = open("crawler.obj", 'wb')
+    # f = open("crawler_2.obj", 'wb')
     # pickle.dump(crawler, f)
     # f.close()
 
     f = open("crawler.obj", "rb")
-    crawler = pickle.load(f)
+    crawler = pickle.load(f) # crawler.crawl()
     crawler.produce_duplicates()
 
 
