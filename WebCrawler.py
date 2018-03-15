@@ -27,6 +27,7 @@ class WebCrawler:
 
     # print the report produced from crawling a site
     def __str__(self):
+        # TODO: turn each DocID has into something more readable e.g. Doc1, Doc2
         report = " seed_url: " + self.seed_url \
                  + "\n\n robots_txt: " + "[" + ''.join('{}{}'.format(key, val) for key, val in self.robots_txt.items()) \
                  + "\n\n url_frontier: " + "[" + " ".join(self.url_frontier) + "]" \
@@ -97,7 +98,6 @@ class WebCrawler:
     # crawls a site and returns a dictionary of information found
     def crawl(self):
         # dictionary containing information about the site
-
         self.robots_txt = self.get_robots_txt()
 
         self.url_frontier.append(self.seed_url + "/")
@@ -132,18 +132,19 @@ class WebCrawler:
                     current_title = str(soup.title.string) if soup.title is not None else current_page.replace(pwd, '')
 
                     # hash the content of the page to produce a unique DocumentID
-                    current_content = hashlib.sha256(current_content.encode("utf-8")).hexdigest()
+                    current_doc_id = hashlib.sha256(current_content.encode("utf-8")).hexdigest()
 
                     # mark that the page has been visited by adding to visited_url
-                    self.visited_urls[current_page] = (current_title, current_content)
+                    self.visited_urls[current_page] = (current_title, current_doc_id)
+
+                    
 
                     print("visiting: " + current_page + " (" + current_title + ")")
 
                     # if the page is an html document, we need to parse it for links
-                    if current_page.endswith(".html") or current_page.endswith(".htm") or current_page.endswith("/"):
-
+                    if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php"])):
+                        # go through each link in the page
                         for link in soup.find_all('a'):
-
                             # current_url refers to the current link within the current page being processed
                             current_url = link.get('href')
 
@@ -160,7 +161,6 @@ class WebCrawler:
 
                                     # ensure the hasn't been visited before adding it to the queue
                                     if current_url not in self.visited_urls.keys():
-                                        # print("DEBUG MODE - NO URLS ADDED TO FRONTIER")
                                         self.url_frontier.append(current_url)
 
                                 elif not self.url_is_within_scope(current_url) and current_url not in self.outgoing_urls:
@@ -169,6 +169,10 @@ class WebCrawler:
                             # the link is broken
                             elif current_url not in self.broken_urls:
                                 self.broken_urls.append(current_url)
+
+                    # file is a graphic, mark it as such
+                    elif any(current_page.lower().endswith(ext) for ext in [".gif", ".png", ".jpeg", ".jpg"]):
+                        self.graphic_urls.append(current_page)
 
             else:
                 print("not allowed: " + current_page)
@@ -181,16 +185,16 @@ if __name__ == "__main__":
         print(arg)
 
     crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
-    crawler.crawl()
-    crawler.produce_duplicates()
+    # crawler.crawl()
+    # crawler.produce_duplicates()
 
     # export crawler to file
-    f = open("crawler.obj", 'wb')
-    pickle.dump(crawler, f)
-    f.close()
-
-    # f = open("crawler.obj", "rb")
-    # crawler = pickle.load(f) # crawler.crawl()
+    # f = open("crawler.obj", 'wb')
+    # pickle.dump(crawler, f)
     # f.close()
+
+    f = open("crawler.obj", "rb")
+    crawler = pickle.load(f) # crawler.crawl()
+    f.close()
 
     print("done")

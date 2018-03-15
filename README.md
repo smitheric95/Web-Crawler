@@ -1,7 +1,7 @@
 #Web-Crawler
 
 note: may need to run /Applications/Python\ 3.6/Install\ Certificates.command
-	also: pip install furl
+	also: pip install validators
 
 TODO:
 - write report
