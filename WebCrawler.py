@@ -12,6 +12,9 @@ import re
 import urllib.parse
 import hashlib
 import pickle
+import string
+import ast
+import codecs
 
 class WebCrawler:
     def __init__(self, seed_url):
@@ -137,12 +140,17 @@ class WebCrawler:
                     # mark that the page has been visited by adding to visited_url
                     self.visited_urls[current_page] = (current_title, current_doc_id)
 
-                    
-
                     print("visiting: " + current_page + " (" + current_title + ")")
 
                     # if the page is an html document, we need to parse it for links
-                    if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php"])):
+                    if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php", ".txt"])):
+
+                        # format the content of the page
+                        formatted_content = codecs.escape_decode(bytes(soup.get_text().lower(), "utf-8"))[0].decode("utf-8")
+
+                        # store only the unique words of the file
+                        self.words[current_doc_id] = set(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
+
                         # go through each link in the page
                         for link in soup.find_all('a'):
                             # current_url refers to the current link within the current page being processed
@@ -185,16 +193,16 @@ if __name__ == "__main__":
         print(arg)
 
     crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
-    # crawler.crawl()
-    # crawler.produce_duplicates()
+    crawler.crawl()
+    crawler.produce_duplicates()
 
     # export crawler to file
     # f = open("crawler.obj", 'wb')
     # pickle.dump(crawler, f)
     # f.close()
 
-    f = open("crawler.obj", "rb")
-    crawler = pickle.load(f) # crawler.crawl()
-    f.close()
+    # f = open("crawler.obj", "rb")
+    # crawler = pickle.load(f)  # crawler.crawl()
+    # f.close()
 
     print("done")
