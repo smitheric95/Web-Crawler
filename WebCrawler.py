@@ -221,28 +221,17 @@ class WebCrawler:
                 self.frequency_matrix[term] = frequency_count
 
     def print_frequency_matrix(self):
-        # use porter stemmer for comparing words
-        stemmer = PorterStemmer()
-
         output_string = ","
 
         if self.words is not None:
-            # grab the unique, stemmed terms from all the documents
-            all_terms = list(set([stemmer.stem(word) for word_list in self.words.values() for word in word_list]))
-            all_terms.sort()
-
             # create file heading
             for i in range(len(self.words.keys())):
                 output_string += "Doc" + str(i) + ","
             output_string += "\n"
 
-            # add matrix to output string
-            for term in all_terms:
-                output_string += term + ","
-                for word_list in self.words.values():
-                    # append the number of times the stemmed words match
-                    output_string += str(word_list.count(stemmer.stem(term))) + ","
-                output_string += "\n"
+            # add matrix row to output string
+            for i in range(len(self.frequency_matrix)):
+                output_string += self.all_terms[i] + "," + ",".join([str(i) for i in self.frequency_matrix[i]]) + "\n"
 
         return output_string
 
@@ -271,9 +260,9 @@ if __name__ == "__main__":
 
 
 
-    # f = open("tf_matrix.csv", "w")
-    # f.write()
-    # f.close()
+    f = open("tf_matrix.csv", "w")
+    f.write(crawler.print_frequency_matrix())
+    f.close()
 
 
     print("done")
