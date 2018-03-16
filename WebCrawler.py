@@ -13,8 +13,8 @@ import urllib.parse
 import hashlib
 import pickle
 import string
-import ast
 import codecs
+import nltk
 
 class WebCrawler:
     def __init__(self, seed_url):
@@ -105,6 +105,10 @@ class WebCrawler:
 
         self.url_frontier.append(self.seed_url + "/")
 
+        # define a list of acceptable English words for the document word collection
+        acceptable_words = list(nltk.corpus.words.words())
+        acceptable_words.append(["moore", "5337", "7337", "caruth", "lyle", "2017", "2018"])
+
         '''
         pop from the URL frontier while the queue is not empty
         links in queue are valid, full urls
@@ -149,7 +153,8 @@ class WebCrawler:
                         formatted_content = codecs.escape_decode(bytes(soup.get_text().lower(), "utf-8"))[0].decode("utf-8")
 
                         # store only the unique words of the file
-                        self.words[current_doc_id] = set(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
+                        content_unique_words = list(set(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:]))
+                        self.words[current_doc_id] = [w for w in content_unique_words if w in acceptable_words]
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
@@ -186,23 +191,30 @@ class WebCrawler:
                 print("not allowed: " + current_page)
         print("done crawling")
 
+    def build_frequency_matrix(self):
+        if self.words is not None:
+            all_terms = [word for word_list in self.words.values() for word in word_list]
+            print(all_terms)
 
 if __name__ == "__main__":
     # print command line arguments
     for arg in sys.argv[1:]:
         print(arg)
 
-    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
-    crawler.crawl()
-    crawler.produce_duplicates()
+    # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+    # crawler.crawl()
+    # crawler.produce_duplicates()
+
 
     # export crawler to file
     # f = open("crawler.obj", 'wb')
     # pickle.dump(crawler, f)
     # f.close()
 
-    # f = open("crawler.obj", "rb")
-    # crawler = pickle.load(f)  # crawler.crawl()
-    # f.close()
+    # import crawler from file
+    f = open("crawler.obj", "rb")
+    crawler = pickle.load(f)  # crawler.crawl()
+    crawler.build_frequency_matrix()
+    f.close()
 
     print("done")
