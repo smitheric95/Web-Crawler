@@ -15,6 +15,7 @@ import pickle
 import string
 import codecs
 import nltk
+from nltk.stem import PorterStemmer
 
 class WebCrawler:
     def __init__(self, seed_url):
@@ -27,6 +28,8 @@ class WebCrawler:
         self.broken_urls = []
         self.graphic_urls = []
         self.words = {}  # DocumentID : [words]
+        self.all_terms = []  # set of all terms in all documents
+        self.frequency_matrix = []  # Term doc frequency matrix (row=term, col=doc)
 
     # print the report produced from crawling a site
     def __str__(self):
@@ -152,9 +155,10 @@ class WebCrawler:
                         # format the content of the page
                         formatted_content = codecs.escape_decode(bytes(soup.get_text().lower(), "utf-8"))[0].decode("utf-8")
 
-                        # store only the unique words of the file
-                        content_unique_words = list(set(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:]))
-                        self.words[current_doc_id] = [w for w in content_unique_words if w in acceptable_words]
+                        # store only the words of the file
+                        content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
+                        # self.words[current_doc_id] = [w for w in content_words if w in acceptable_words]
+                        self.words[current_doc_id] = content_words
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
@@ -191,30 +195,85 @@ class WebCrawler:
                 print("not allowed: " + current_page)
         print("done crawling")
 
+    # convert word listings into term-document frequency matrix
+    # populates frequency_matrix and all_terms
     def build_frequency_matrix(self):
         if self.words is not None:
-            all_terms = [word for word_list in self.words.values() for word in word_list]
-            print(all_terms)
+            # use porter stemmer for comparing words
+            stemmer = PorterStemmer()
+
+            # grab the unique, stemmed terms from all the documents
+            self.all_terms = list(set([stemmer.stem(word) for word_list in self.words.values() for word in word_list]))
+            self.all_terms.sort()
+
+            # initialize frequency matrix for one row per term
+            self.frequency_matrix = [[] for i in self.all_terms]
+
+            # add term frequencies to the matrix
+            for term in range(len(self.all_terms)):
+                # append the number of times the stemmed words match
+                frequency_count = []
+
+                for word_list in self.words.values():
+                    stemmed_word_list = [stemmer.stem(word) for word in word_list]
+                    frequency_count.append(stemmed_word_list.count(self.all_terms[term]))
+
+                self.frequency_matrix[term] = frequency_count
+
+    def print_frequency_matrix(self):
+        # use porter stemmer for comparing words
+        stemmer = PorterStemmer()
+
+        output_string = ","
+
+        if self.words is not None:
+            # grab the unique, stemmed terms from all the documents
+            all_terms = list(set([stemmer.stem(word) for word_list in self.words.values() for word in word_list]))
+            all_terms.sort()
+
+            # create file heading
+            for i in range(len(self.words.keys())):
+                output_string += "Doc" + str(i) + ","
+            output_string += "\n"
+
+            # add matrix to output string
+            for term in all_terms:
+                output_string += term + ","
+                for word_list in self.words.values():
+                    # append the number of times the stemmed words match
+                    output_string += str(word_list.count(stemmer.stem(term))) + ","
+                output_string += "\n"
+
+        return output_string
+
 
 if __name__ == "__main__":
+    # TODO: How to handle dictionary and numbers?
     # print command line arguments
     for arg in sys.argv[1:]:
         print(arg)
 
+    # import crawler from file
+    f = open("crawler.obj", "rb")
+    crawler = pickle.load(f)  # crawler.crawl()
+    f.close()
+
     # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
     # crawler.crawl()
     # crawler.produce_duplicates()
-
+    crawler.frequency_matrix = []
+    crawler.build_frequency_matrix()
 
     # export crawler to file
     # f = open("crawler.obj", 'wb')
     # pickle.dump(crawler, f)
     # f.close()
 
-    # import crawler from file
-    f = open("crawler.obj", "rb")
-    crawler = pickle.load(f)  # crawler.crawl()
-    crawler.build_frequency_matrix()
-    f.close()
+
+
+    # f = open("tf_matrix.csv", "w")
+    # f.write()
+    # f.close()
+
 
     print("done")
