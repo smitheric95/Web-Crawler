@@ -195,8 +195,10 @@ class WebCrawler:
                 print("not allowed: " + current_page)
         print("done crawling")
 
-    # convert word listings into term-document frequency matrix
-    # populates frequency_matrix and all_terms
+    '''
+    convert word listings into term-document frequency matrix
+    populates frequency_matrix and all_terms
+    '''
     def build_frequency_matrix(self):
         if self.words is not None:
             # use porter stemmer for comparing words
@@ -220,6 +222,7 @@ class WebCrawler:
 
                 self.frequency_matrix[term] = frequency_count
 
+    # returns the contents of self.frequency_matrix
     def print_frequency_matrix(self):
         output_string = ","
 
@@ -235,6 +238,29 @@ class WebCrawler:
 
         return output_string
 
+    # returns the n tuples of (term, total term frequency, doc frequency)
+    def n_most_common(self, n):
+        term_totals = []
+        sorted_terms = self.all_terms
+        doc_freqs = []
+
+        # calculate the total frequencies and doc frequencies of each term
+        for row in self.frequency_matrix:
+            term_totals.append(sum(row))
+            doc_freqs.append(sum([1 for x in row if x > 0]))
+
+        # sort terms and doc frequencies based off total frequencies
+        term_totals.sort()
+        sorted_terms = [x for _, x in sorted(zip(term_totals, sorted_terms))]
+        doc_freqs = [x for _, x in sorted(zip(term_totals, doc_freqs))]
+
+        n_most_freq = []
+
+        # return n most common
+        for i,j,k in zip(sorted_terms, term_totals, doc_freqs):
+            
+
+        return
 
 if __name__ == "__main__":
     # TODO: How to handle dictionary and numbers?
@@ -247,11 +273,14 @@ if __name__ == "__main__":
     crawler = pickle.load(f)  # crawler.crawl()
     f.close()
 
+    for i,j,k in crawler.n_most_common(5):
+        print(i,j,k)
+
     # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
     # crawler.crawl()
     # crawler.produce_duplicates()
-    crawler.frequency_matrix = []
-    crawler.build_frequency_matrix()
+    # crawler.frequency_matrix = []
+    # crawler.build_frequency_matrix()
 
     # export crawler to file
     # f = open("crawler.obj", 'wb')
@@ -259,10 +288,10 @@ if __name__ == "__main__":
     # f.close()
 
 
-
-    f = open("tf_matrix.csv", "w")
-    f.write(crawler.print_frequency_matrix())
-    f.close()
+    #
+    # f = open("tf_matrix.csv", "w")
+    # f.write(crawler.print_frequency_matrix())
+    # f.close()
 
 
     print("done")
