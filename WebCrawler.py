@@ -123,11 +123,13 @@ class WebCrawler:
         acceptable_words = list(nltk.corpus.words.words())
         acceptable_words.append(["moore", "5337", "7337", "caruth", "lyle", "2017", "2018"])
 
+        num_pages_crawled = 0
+
         '''
         pop from the URL frontier while the queue is not empty
         links in queue are valid, full urls
         '''
-        while self.url_frontier:
+        while self.url_frontier and (self.page_limit is None or num_pages_crawled < self.page_limit):
             # current_page refers to the url of the current page being processed
             current_page = self.url_frontier.pop()  # select the next url
 
@@ -157,8 +159,10 @@ class WebCrawler:
 
                     # mark that the page has been visited by adding to visited_url
                     self.visited_urls[current_page] = (current_title, current_doc_id)
+                    num_pages_crawled += 1
 
-                    print("visiting: " + current_page + " (" + current_title + ")")
+                    print(str(num_pages_crawled) + ". " + "Visiting: " + current_page.replace("http://lyle.smu.edu/", "")
+                          + " (" + current_title + ")")
 
                     # if the page is an html document, we need to parse it for links
                     if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php", ".txt"])):
@@ -206,7 +210,7 @@ class WebCrawler:
                         self.graphic_urls.append(current_page)
 
             else:
-                print("not allowed: " + current_page)
+                print("Not allowed: " + current_page)
         print("done crawling")
 
     '''
@@ -289,7 +293,7 @@ if __name__ == "__main__":
         print("page limit: " + str(crawler.page_limit))
         print("stop words: " + str(crawler.stop_words))
 
-        # crawler.crawl()
+        crawler.crawl()
         # crawler.produce_duplicates()
         # crawler.frequency_matrix = []
         # crawler.build_frequency_matrix()

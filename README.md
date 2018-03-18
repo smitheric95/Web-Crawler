@@ -5,7 +5,7 @@ note: may need to run /Applications/Python\ 3.6/Install\ Certificates.command
 
 TODO:
 - write report
-- take user input of num pages and stop words
+- limit pages w self.page_limits
 - bash script to install requirements
 	- pycharm > tools > setup.py
 - finish crawler
