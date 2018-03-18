@@ -21,6 +21,8 @@ class WebCrawler:
     def __init__(self, seed_url):
         self.seed_url = seed_url
         self.robots_txt = None
+        self.page_limit = None
+        self.stop_words = []  # list of words to be ignored when processing documents
         self.url_frontier = []  # list of urls not yet visited
         self.visited_urls = {}  # URL : (Title, DocumentID) (hash of content of a visited URL)
         self.duplicate_urls = {}    # DocumentID : [URLs that produce that ID]
@@ -30,11 +32,9 @@ class WebCrawler:
         self.words = {}  # DocumentID : [words]
         self.all_terms = []  # set of all terms in all documents
         self.frequency_matrix = []  # Term doc frequency matrix (row=term, col=doc)
-        self.stop_words = []  # list of words to be ignored when processing documents
 
     # print the report produced from crawling a site
     def __str__(self):
-        # TODO: turn each DocID has into something more readable e.g. Doc1, Doc2
         report = " seed_url: " + self.seed_url \
                  + "\n\n robots_txt: " + "[" + ''.join('{}{}'.format(key, val) for key, val in self.robots_txt.items()) \
                  + "\n\n url_frontier: " + "[" + " ".join(self.url_frontier) + "]" \
@@ -67,6 +67,9 @@ class WebCrawler:
                 )  # to neglect the comments or other junk info
 
         return result_data_set
+
+    def set_page_limit(self, limit):
+        self.page_limit = int(limit)
 
     # sets the stop words list given a file with stop words separated by line
     def set_stop_words(self, filepath):
@@ -273,8 +276,8 @@ if __name__ == "__main__":
     crawler = pickle.load(f)  # crawler.crawl()
     f.close()
 
-    for arg in sys.argv[1:]:
-        crawler.set_stop_words(arg)
+    crawler.set_page_limit(sys.argv[1])
+    crawler.set_stop_words(sys.argv[2])
 
     print("stop words: " + str(crawler.stop_words))
 
