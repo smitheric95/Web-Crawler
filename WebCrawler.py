@@ -30,6 +30,7 @@ class WebCrawler:
         self.words = {}  # DocumentID : [words]
         self.all_terms = []  # set of all terms in all documents
         self.frequency_matrix = []  # Term doc frequency matrix (row=term, col=doc)
+        self.stop_words = []  # list of words to be ignored when processing documents
 
     # print the report produced from crawling a site
     def __str__(self):
@@ -67,10 +68,18 @@ class WebCrawler:
 
         return result_data_set
 
+    # sets the stop words list given a file with stop words separated by line
+    def set_stop_words(self, filepath):
+        with open(filepath, "r") as stop_words_file:
+            stop_words = stop_words_file.readlines()
+
+        self.stop_words = [x.strip() for x in stop_words]
+
     '''
     returns whether or not a url is valid
     source: https://stackoverflow.com/a/7160778/8853372
     '''
+    @staticmethod
     def url_is_valid(self, url_string):
         pattern = regex = re.compile(
             r'^(?:http|ftp)s?://'  # http:// or https://
@@ -238,7 +247,7 @@ class WebCrawler:
 
         return output_string
 
-    # returns the n tuples of (term, total term frequency, doc frequency)
+    # returns a zip object containing n elements: (term, total term frequency, doc frequency)
     def n_most_common(self, n):
         term_totals = []
         sorted_terms = self.all_terms
@@ -257,37 +266,33 @@ class WebCrawler:
         # return n most common
         return zip(sorted_terms[-n:], term_totals[-n:], doc_freqs[-n:])
 
-if __name__ == "__main__":
-    # TODO: How to handle dictionary and numbers?
-    # TODO: stop words
-    # print command line arguments
-    for arg in sys.argv[1:]:
-        print(arg)
 
+if __name__ == "__main__":
     # import crawler from file
     f = open("crawler.obj", "rb")
     crawler = pickle.load(f)  # crawler.crawl()
     f.close()
 
-    for i,j,k in crawler.n_most_common(5):
-        print(i,j,k)
+    for arg in sys.argv[1:]:
+        crawler.set_stop_words(arg)
+
+    print("stop words: " + str(crawler.stop_words))
 
     # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
     # crawler.crawl()
     # crawler.produce_duplicates()
     # crawler.frequency_matrix = []
     # crawler.build_frequency_matrix()
+    # for i,j,k in crawler.n_most_common(20):
+    #     print(i,j,k)
 
     # export crawler to file
     # f = open("crawler.obj", 'wb')
     # pickle.dump(crawler, f)
     # f.close()
 
-
-    #
     # f = open("tf_matrix.csv", "w")
     # f.write(crawler.print_frequency_matrix())
     # f.close()
-
 
     print("done")

@@ -8,8 +8,9 @@ TODO:
 - take user input of num pages and stop words
 - bash script to install requirements
 - finish crawler
-- how to handle spreadsheets and pdfs?
-
+- how to handle dictionary words and numbers?
+- include links not specifically in <a> tags
+	- including graphics
 
 
 crawler:
@@ -22,8 +23,7 @@ crawler:
 - term-document frequency matrix
 	- case insensitive matching
 	- assign unique id to each doc
-- 20 most common words
+- 20 most common stemmed words and their doc frequencies
 - ensure that only links in robots.txt are visited
 
-data structure:
 
