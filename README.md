@@ -7,11 +7,13 @@ TODO:
 - write report
 - take user input of num pages and stop words
 - bash script to install requirements
+	- pycharm > tools > setup.py
 - finish crawler
 - how to handle dictionary words and numbers?
+	- re-read requirements for words
 - include links not specifically in <a> tags
 	- including graphics
-
+- print status of crawler to user
 
 crawler:
 - url of each page

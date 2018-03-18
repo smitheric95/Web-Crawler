@@ -82,7 +82,6 @@ class WebCrawler:
     returns whether or not a url is valid
     source: https://stackoverflow.com/a/7160778/8853372
     '''
-    @staticmethod
     def url_is_valid(self, url_string):
         pattern = regex = re.compile(
             r'^(?:http|ftp)s?://'  # http:// or https://
@@ -120,7 +119,7 @@ class WebCrawler:
 
         self.url_frontier.append(self.seed_url + "/")
 
-        # define a list of acceptable English words for the document word collection
+        # TODO: define a list of acceptable English words for the document word collection
         acceptable_words = list(nltk.corpus.words.words())
         acceptable_words.append(["moore", "5337", "7337", "caruth", "lyle", "2017", "2018"])
 
@@ -169,8 +168,11 @@ class WebCrawler:
 
                         # store only the words of the file
                         content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
+
+                        # exclude words in the stop words collection
+                        self.words[current_doc_id] = [w for w in content_words if w not in self.stop_words]
                         # self.words[current_doc_id] = [w for w in content_words if w in acceptable_words]
-                        self.words[current_doc_id] = content_words
+                        # self.words[current_doc_id] = content_words
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
@@ -272,30 +274,36 @@ class WebCrawler:
 
 if __name__ == "__main__":
     # import crawler from file
-    f = open("crawler.obj", "rb")
-    crawler = pickle.load(f)  # crawler.crawl()
-    f.close()
-
-    crawler.set_page_limit(sys.argv[1])
-    crawler.set_stop_words(sys.argv[2])
-
-    print("stop words: " + str(crawler.stop_words))
-
-    # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
-    # crawler.crawl()
-    # crawler.produce_duplicates()
-    # crawler.frequency_matrix = []
-    # crawler.build_frequency_matrix()
-    # for i,j,k in crawler.n_most_common(20):
-    #     print(i,j,k)
-
-    # export crawler to file
-    # f = open("crawler.obj", 'wb')
-    # pickle.dump(crawler, f)
+    # f = open("crawler.obj", "rb")
+    # crawler = pickle.load(f)  # crawler.crawl()
     # f.close()
 
-    # f = open("tf_matrix.csv", "w")
-    # f.write(crawler.print_frequency_matrix())
-    # f.close()
+    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+
+    try:
+        crawler.set_page_limit(sys.argv[1])
+        crawler.set_stop_words(sys.argv[2])
+    except:
+        print("Error parsing input.\nUsage is: python WebCrawler.py <page limit> <stop words file>")
+    else:
+        print("page limit: " + str(crawler.page_limit))
+        print("stop words: " + str(crawler.stop_words))
+
+        # crawler.crawl()
+        # crawler.produce_duplicates()
+        # crawler.frequency_matrix = []
+        # crawler.build_frequency_matrix()
+        #
+        # for i, j, k in crawler.n_most_common(20):
+        #     print(i, j, k)
+
+        # export crawler to file
+        # f = open("crawler.obj", 'wb')
+        # pickle.dump(crawler, f)
+        # f.close()
+
+        # f = open("tf_matrix.csv", "w")
+        # f.write(crawler.print_frequency_matrix())
+        # f.close()
 
     print("done")
