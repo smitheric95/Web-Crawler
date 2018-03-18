@@ -250,20 +250,16 @@ class WebCrawler:
             doc_freqs.append(sum([1 for x in row if x > 0]))
 
         # sort terms and doc frequencies based off total frequencies
-        term_totals.sort()
         sorted_terms = [x for _, x in sorted(zip(term_totals, sorted_terms))]
         doc_freqs = [x for _, x in sorted(zip(term_totals, doc_freqs))]
-
-        n_most_freq = []
+        term_totals.sort()
 
         # return n most common
-        for i,j,k in zip(sorted_terms, term_totals, doc_freqs):
-            
-
-        return
+        return zip(sorted_terms[-n:], term_totals[-n:], doc_freqs[-n:])
 
 if __name__ == "__main__":
     # TODO: How to handle dictionary and numbers?
+    # TODO: stop words
     # print command line arguments
     for arg in sys.argv[1:]:
         print(arg)
