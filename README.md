@@ -2,6 +2,8 @@
 
 note: may need to run /Applications/Python\ 3.6/Install\ Certificates.command
 	also: pip install validators, nltk.download() words
+	- must be python3
+	- sudo apt-get install python3-setuptools
 
 TODO:
 - write report
