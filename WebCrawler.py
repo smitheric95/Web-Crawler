@@ -278,7 +278,7 @@ class WebCrawler:
         term_totals.sort()
 
         # return n most common
-        return zip(sorted_terms[-n:], term_totals[-n:], doc_freqs[-n:])
+        return zip(reversed(sorted_terms[-n:]), reversed(term_totals[-n:]), reversed(doc_freqs[-n:]))
 
 
 if __name__ == "__main__":
@@ -299,18 +299,19 @@ if __name__ == "__main__":
         print("stop words: " + str(crawler.stop_words))
 
         crawler.crawl()
-        # crawler.produce_duplicates()
-        # crawler.frequency_matrix = []
-        # crawler.build_frequency_matrix()
-        #
-        # for i, j, k in crawler.n_most_common(20):
-        #     print(i, j, k)
+        crawler.produce_duplicates()
+        crawler.frequency_matrix = []
+        crawler.build_frequency_matrix()
+
+        for i, j, k in crawler.n_most_common(20):
+            print(i, j, k)
 
         # export crawler to file
-        # f = open("crawler.obj", 'wb')
-        # pickle.dump(crawler, f)
-        # f.close()
+        f = open("crawler.obj", 'wb')
+        pickle.dump(crawler, f)
+        f.close()
 
+        # export frequency matrix to file
         # f = open("tf_matrix.csv", "w")
         # f.write(crawler.print_frequency_matrix())
         # f.close()
