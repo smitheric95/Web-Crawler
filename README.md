@@ -7,8 +7,6 @@ TODO:
 - write report
 - bash script to install requirements
 	- pycharm > tools > setup.py
-- how to handle dictionary words and numbers?
-	- re-read requirements for words
 - include links not specifically in <a> tags
 	- including graphics
 - print status of crawler to user

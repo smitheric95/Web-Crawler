@@ -290,11 +290,11 @@ class WebCrawler:
 
 if __name__ == "__main__":
     # import crawler from file
-    f = open("crawler.obj", "rb")
-    crawler = pickle.load(f)  # crawler.crawl()
-    f.close()
+    # f = open("crawler.obj", "rb")
+    # crawler = pickle.load(f)  # crawler.crawl()
+    # f.close()
 
-    # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
 
     try:
         page_limit, stop_words = sys.argv[1:3]
@@ -310,15 +310,23 @@ if __name__ == "__main__":
         [print("-", end="") for x in range(40)]
         print("\nBeginning crawling...")
 
-        # crawler.crawl()
-        # crawler.produce_duplicates()
+        crawler.crawl()
+        crawler.produce_duplicates()
+
+        [print("-", end="") for x in range(40)]
+
         print(crawler)
 
-        # crawler.frequency_matrix = []
-        # crawler.build_frequency_matrix()
-        #
-        # for i, j, k in crawler.n_most_common(20):
-        #     print(i, j, k)
+        [print("-", end="") for x in range(40)]
+
+        crawler.frequency_matrix = []
+        crawler.build_frequency_matrix()
+
+        print("Most Common Terms:")
+        for i, j, k in crawler.n_most_common(20):
+            print(i, j, k)
+
+        [print("-", end="") for x in range(40)]
 
         # export crawler to file
         # f = open("crawler.obj", 'wb')
@@ -326,8 +334,9 @@ if __name__ == "__main__":
         # f.close()
 
         # export frequency matrix to file
+        # print("Complete frequency matrix has been exported to tf_matrix.csv")
         # f = open("tf_matrix.csv", "w")
         # f.write(crawler.print_frequency_matrix())
         # f.close()
 
-    print("done")
+    print("Goodbye!")
