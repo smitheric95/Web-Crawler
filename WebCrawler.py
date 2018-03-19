@@ -179,12 +179,9 @@ class WebCrawler:
                         # store only the words of the file
                         content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
 
-
-
-
-
-                        # exclude words in the stop words collection
-                        self.words[current_doc_id] = [w for w in content_words if w not in self.stop_words]
+                        # keep track of only those words that are valid and not in the stop word collection
+                        self.words[current_doc_id] = [w for w in content_words
+                                                      if w not in self.stop_words and self.word_is_valid(w)]
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
