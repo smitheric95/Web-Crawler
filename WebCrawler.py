@@ -223,7 +223,7 @@ class WebCrawler:
 
             else:
                 print("Not allowed: " + current_page.replace(self.domain_url, ""))
-        print("done crawling")
+        print("\nDone crawling.")
 
     '''
     convert word listings into term-document frequency matrix
@@ -290,17 +290,17 @@ class WebCrawler:
 
 if __name__ == "__main__":
     # import crawler from file
-    # f = open("crawler.obj", "rb")
-    # crawler = pickle.load(f)  # crawler.crawl()
-    # f.close()
+    f = open("crawler.obj", "rb")
+    crawler = pickle.load(f)  # crawler.crawl()
+    f.close()
 
-    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+    # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
 
     try:
         page_limit, stop_words = sys.argv[1:3]
 
-        crawler.set_page_limit(page_limit)
-        crawler.set_stop_words(stop_words)
+        # crawler.set_page_limit(page_limit)
+        # crawler.set_stop_words(stop_words)
     except:
         print("Error parsing input.\nUsage is: python WebCrawler.py <page limit> <stop words file>")
     else:
@@ -310,23 +310,26 @@ if __name__ == "__main__":
         [print("-", end="") for x in range(40)]
         print("\nBeginning crawling...")
 
-        crawler.crawl()
-        crawler.produce_duplicates()
+        # crawler.crawl()
+        # crawler.produce_duplicates()
 
-        [print("-", end="") for x in range(40)]
+        [print("-", end="") for x in range(70)]
 
         print(crawler)
 
-        [print("-", end="") for x in range(40)]
+        [print("-", end="") for x in range(70)]
 
-        crawler.frequency_matrix = []
-        crawler.build_frequency_matrix()
+        # crawler.build_frequency_matrix()
 
-        print("Most Common Terms:")
+        print("\nMost Common Terms:")
+        print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
+
+        count = 1
         for i, j, k in crawler.n_most_common(20):
-            print(i, j, k)
+            print("{: <15} {: >25} {: >25}".format((str(count) + ". " + i),j,k))
+            count += 1
 
-        [print("-", end="") for x in range(40)]
+        [print("-", end="") for x in range(70)]
 
         # export crawler to file
         # f = open("crawler.obj", 'wb')
@@ -334,9 +337,9 @@ if __name__ == "__main__":
         # f.close()
 
         # export frequency matrix to file
-        # print("Complete frequency matrix has been exported to tf_matrix.csv")
+        # print("\nComplete frequency matrix has been exported to tf_matrix.csv")
         # f = open("tf_matrix.csv", "w")
         # f.write(crawler.print_frequency_matrix())
         # f.close()
 
-    print("Goodbye!")
+    print("\n\nGoodbye!")
