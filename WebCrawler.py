@@ -289,17 +289,17 @@ class WebCrawler:
 
 if __name__ == "__main__":
     # import crawler from file
-    f = open("crawler.obj", "rb")
-    crawler = pickle.load(f)  # crawler.crawl()
-    f.close()
+    # f = open("crawler.obj", "rb")
+    # crawler = pickle.load(f)  # crawler.crawl()
+    # f.close()
 
     # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
 
     try:
         page_limit, stop_words = sys.argv[1:3]
 
-        # crawler.set_page_limit(page_limit)
-        # crawler.set_stop_words(stop_words)
+        crawler.set_page_limit(page_limit)
+        crawler.set_stop_words(stop_words)
     except:
         print("Error parsing input.\nUsage is: python WebCrawler.py <page limit> <stop words file>")
     else:

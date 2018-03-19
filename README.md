@@ -4,13 +4,12 @@ note: may need to run /Applications/Python\ 3.6/Install\ Certificates.command
 	also: pip install validators, nltk.download() words
 	- must be python3
 	- sudo apt-get install python3-setuptools
-
+	- sudo python3 setup.py install
 TODO:
 - write report
-- bash script to install requirements
-	- pycharm > tools > setup.py
 - include links not specifically in <a> tags
 	- including graphics
+- example output: save directly from terminal
 
 crawler:
 - url of each page
