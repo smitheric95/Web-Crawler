@@ -83,7 +83,7 @@ class WebCrawler:
     source: https://stackoverflow.com/a/7160778/8853372
     '''
     def url_is_valid(self, url_string):
-        pattern = regex = re.compile(
+        pattern = re.compile(
             r'^(?:http|ftp)s?://'  # http:// or https://
             r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|'  # domain...
             r'localhost|'  # localhost...
@@ -93,6 +93,16 @@ class WebCrawler:
             re.IGNORECASE)
 
         return bool(pattern.match(url_string))
+
+    '''
+    returns whether or not a given word is valid
+    A word is a string of non-space characters, beginning with an alphabetic character. 
+    It may contain special characters, but the last character of a word is either alphabetic or numeric.
+    '''
+    def word_is_valid(self, word):
+        pattern = re.compile(r'^[a-zA-z](\S*)[a-zA-z0-9]$')
+
+        return bool(pattern.match(word))
 
     # returns whether or not the url is within the scope of the seed url
     def url_is_within_scope(self, url_string):
@@ -118,10 +128,6 @@ class WebCrawler:
         self.robots_txt = self.get_robots_txt()
 
         self.url_frontier.append(self.seed_url + "/")
-
-        # TODO: define a list of acceptable English words for the document word collection
-        acceptable_words = list(nltk.corpus.words.words())
-        acceptable_words.append(["moore", "5337", "7337", "caruth", "lyle", "2017", "2018"])
 
         num_pages_crawled = 0
 
@@ -161,8 +167,8 @@ class WebCrawler:
                     self.visited_urls[current_page] = (current_title, current_doc_id)
                     num_pages_crawled += 1
 
-                    print(str(num_pages_crawled) + ". " + "Visiting: " + current_page.replace("http://lyle.smu.edu/", "")
-                          + " (" + current_title + ")")
+                    print(str(num_pages_crawled) + ". " + "Visiting: " +
+                          current_page.replace("http://lyle.smu.edu/", "") + " (" + current_title + ")")
 
                     # if the page is an html document, we need to parse it for links
                     if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php", ".txt"])):
@@ -173,10 +179,12 @@ class WebCrawler:
                         # store only the words of the file
                         content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
 
+
+
+
+
                         # exclude words in the stop words collection
                         self.words[current_doc_id] = [w for w in content_words if w not in self.stop_words]
-                        # self.words[current_doc_id] = [w for w in content_words if w in acceptable_words]
-                        # self.words[current_doc_id] = content_words
 
                         # go through each link in the page
                         for link in soup.find_all('a'):

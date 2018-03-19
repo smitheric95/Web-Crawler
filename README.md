@@ -5,10 +5,8 @@ note: may need to run /Applications/Python\ 3.6/Install\ Certificates.command
 
 TODO:
 - write report
-- limit pages w self.page_limits
 - bash script to install requirements
 	- pycharm > tools > setup.py
-- finish crawler
 - how to handle dictionary words and numbers?
 	- re-read requirements for words
 - include links not specifically in <a> tags
