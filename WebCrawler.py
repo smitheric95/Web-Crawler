@@ -14,7 +14,6 @@ import hashlib
 import pickle
 import string
 import codecs
-import nltk
 from nltk.stem import PorterStemmer
 
 class WebCrawler:
@@ -304,10 +303,11 @@ if __name__ == "__main__":
     except:
         print("Error parsing input.\nUsage is: python WebCrawler.py <page limit> <stop words file>")
     else:
+        [print("-", end="") for x in range(70)]
         print("Seed URL: " + crawler.seed_url)
         print("Page limit: " + str(page_limit))
         print("Stop words: " + str(stop_words))
-        [print("-", end="") for x in range(40)]
+        [print("-", end="") for x in range(70)]
         print("\nBeginning crawling...")
 
         # crawler.crawl()
@@ -321,8 +321,9 @@ if __name__ == "__main__":
 
         # crawler.build_frequency_matrix()
 
-        print("\nMost Common Terms:")
+        print("\nMost Common Stemmed Terms:")
         print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
+        print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
 
         count = 1
         for i, j, k in crawler.n_most_common(20):
@@ -337,7 +338,7 @@ if __name__ == "__main__":
         # f.close()
 
         # export frequency matrix to file
-        # print("\nComplete frequency matrix has been exported to tf_matrix.csv")
+        print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
         # f = open("tf_matrix.csv", "w")
         # f.write(crawler.print_frequency_matrix())
         # f.close()

@@ -9,7 +9,6 @@ TODO:
 	- pycharm > tools > setup.py
 - include links not specifically in <a> tags
 	- including graphics
-- print status of crawler to user
 
 crawler:
 - url of each page
