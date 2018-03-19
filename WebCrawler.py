@@ -20,6 +20,7 @@ from nltk.stem import PorterStemmer
 class WebCrawler:
     def __init__(self, seed_url):
         self.seed_url = seed_url
+        self.domain_url = "/".join(self.seed_url.split("/")[:3])
         self.robots_txt = None
         self.page_limit = None
         self.stop_words = []  # list of words to be ignored when processing documents
@@ -35,14 +36,17 @@ class WebCrawler:
 
     # print the report produced from crawling a site
     def __str__(self):
-        report = " seed_url: " + self.seed_url \
-                 + "\n\n robots_txt: " + "[" + ''.join('{}{}'.format(key, val) for key, val in self.robots_txt.items()) \
-                 + "\n\n url_frontier: " + "[" + " ".join(self.url_frontier) + "]" \
-                 + "\n\n visited_urls: " + str(self.visited_urls) \
-                 + "\n\n outgoing_urls: " + "[" + " ".join(self.outgoing_urls) + "]" \
-                 + "\n\n broken_urls: " + "[" + " ".join(self.broken_urls) + "]" \
-                 + "\n\n graphic_urls: " + "[" + " ".join(self.graphic_urls) + "]" \
-            # + "\n\n words: " +  "[" + " ".join(self.words)
+        report = "\n Visited URLs: " + str(len(self.visited_urls)) \
+                 + "\n\n Outgoing URLs: " + "\n  +  " + "\n  +  ".join(self.outgoing_urls) \
+                 + "\n\n Broken URLs: " + "\n  +  " + "\n  +  ".join(self.broken_urls) \
+                 + "\n\n Graphic URLs: " + "\n  +  " + "\n  +  ".join(self.graphic_urls) \
+                 + "\n\nDuplicate URLs:\n"
+
+        # print duplicate urls
+        for key in range(len(self.duplicate_urls.keys())):
+            report += "\t +  Doc" + str(key + 1) + ":\n"
+            for val in list(crawler.duplicate_urls.values())[key]:
+                report += "\t\t  +  " + val + "\n"
 
         return report
 
@@ -127,6 +131,9 @@ class WebCrawler:
         # dictionary containing information about the site
         self.robots_txt = self.get_robots_txt()
 
+        print("robots.txt: " + " ".join("{}{}".format(key, [
+            v.replace(self.domain_url, "") for v in val]) for key, val in self.robots_txt.items()))
+
         self.url_frontier.append(self.seed_url + "/")
 
         num_pages_crawled = 0
@@ -168,7 +175,7 @@ class WebCrawler:
                     num_pages_crawled += 1
 
                     print(str(num_pages_crawled) + ". " + "Visiting: " +
-                          current_page.replace("http://lyle.smu.edu/", "") + " (" + current_title + ")")
+                          current_page.replace(self.domain_url, "") + " (" + current_title + ")")
 
                     # if the page is an html document, we need to parse it for links
                     if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php", ".txt"])):
@@ -215,7 +222,7 @@ class WebCrawler:
                         self.graphic_urls.append(current_page)
 
             else:
-                print("Not allowed: " + current_page)
+                print("Not allowed: " + current_page.replace(self.domain_url, ""))
         print("done crawling")
 
     '''
@@ -283,33 +290,40 @@ class WebCrawler:
 
 if __name__ == "__main__":
     # import crawler from file
-    # f = open("crawler.obj", "rb")
-    # crawler = pickle.load(f)  # crawler.crawl()
-    # f.close()
+    f = open("crawler.obj", "rb")
+    crawler = pickle.load(f)  # crawler.crawl()
+    f.close()
 
-    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+    # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
 
     try:
-        crawler.set_page_limit(sys.argv[1])
-        crawler.set_stop_words(sys.argv[2])
+        page_limit, stop_words = sys.argv[1:3]
+
+        crawler.set_page_limit(page_limit)
+        crawler.set_stop_words(stop_words)
     except:
         print("Error parsing input.\nUsage is: python WebCrawler.py <page limit> <stop words file>")
     else:
-        print("page limit: " + str(crawler.page_limit))
-        print("stop words: " + str(crawler.stop_words))
+        print("Seed URL: " + crawler.seed_url)
+        print("Page limit: " + str(page_limit))
+        print("Stop words: " + str(stop_words))
+        [print("-", end="") for x in range(40)]
+        print("\nBeginning crawling...")
 
-        crawler.crawl()
-        crawler.produce_duplicates()
-        crawler.frequency_matrix = []
-        crawler.build_frequency_matrix()
+        # crawler.crawl()
+        # crawler.produce_duplicates()
+        print(crawler)
 
-        for i, j, k in crawler.n_most_common(20):
-            print(i, j, k)
+        # crawler.frequency_matrix = []
+        # crawler.build_frequency_matrix()
+        #
+        # for i, j, k in crawler.n_most_common(20):
+        #     print(i, j, k)
 
         # export crawler to file
-        f = open("crawler.obj", 'wb')
-        pickle.dump(crawler, f)
-        f.close()
+        # f = open("crawler.obj", 'wb')
+        # pickle.dump(crawler, f)
+        # f.close()
 
         # export frequency matrix to file
         # f = open("tf_matrix.csv", "w")
