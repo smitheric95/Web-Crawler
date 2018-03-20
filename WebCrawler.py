@@ -11,7 +11,6 @@ import sys
 import re
 import urllib.parse
 import hashlib
-import pickle
 import string
 import codecs
 from nltk.stem import PorterStemmer
@@ -131,7 +130,7 @@ class WebCrawler:
         self.robots_txt = self.get_robots_txt()
 
         print("robots.txt: " + " ".join("{}{}".format(key, [
-            v.replace(self.domain_url, "") for v in val]) for key, val in self.robots_txt.items()))
+            v.replace(self.domain_url, "") for v in val]) for key, val in self.robots_txt.items()) + "\n")
 
         self.url_frontier.append(self.seed_url + "/")
 
@@ -288,12 +287,7 @@ class WebCrawler:
 
 
 if __name__ == "__main__":
-    # import crawler from file
-    # f = open("crawler.obj", "rb")
-    # crawler = pickle.load(f)  # crawler.crawl()
-    # f.close()
-
-    # crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
+    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
 
     try:
         page_limit, stop_words = sys.argv[1:3]
@@ -304,14 +298,14 @@ if __name__ == "__main__":
         print("Error parsing input.\nUsage is: python WebCrawler.py <page limit> <stop words file>")
     else:
         [print("-", end="") for x in range(70)]
-        print("Seed URL: " + crawler.seed_url)
+        print("\nSeed URL: " + crawler.seed_url)
         print("Page limit: " + str(page_limit))
         print("Stop words: " + str(stop_words))
         [print("-", end="") for x in range(70)]
-        print("\nBeginning crawling...")
+        print("\nBeginning crawling...\n")
 
-        # crawler.crawl()
-        # crawler.produce_duplicates()
+        crawler.crawl()
+        crawler.produce_duplicates()
 
         [print("-", end="") for x in range(70)]
 
@@ -319,9 +313,9 @@ if __name__ == "__main__":
 
         [print("-", end="") for x in range(70)]
 
-        # crawler.build_frequency_matrix()
+        crawler.build_frequency_matrix()
 
-        print("\nMost Common Stemmed Terms:")
+        print("\nMost Common Stemmed Terms:\n")
         print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
         print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
 
@@ -332,15 +326,10 @@ if __name__ == "__main__":
 
         [print("-", end="") for x in range(70)]
 
-        # export crawler to file
-        # f = open("crawler.obj", 'wb')
-        # pickle.dump(crawler, f)
-        # f.close()
-
         # export frequency matrix to file
         print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
-        # f = open("tf_matrix.csv", "w")
-        # f.write(crawler.print_frequency_matrix())
-        # f.close()
+        f = open("tf_matrix.csv", "w")
+        f.write(crawler.print_frequency_matrix())
+        f.close()
 
-    print("\n\nGoodbye!")
+    print("\n\nGoodbye!\n")

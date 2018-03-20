@@ -1,0 +1,112 @@
+Erics-MacBook-Pro:Web-Crawler ericsmith$ python WebCrawler.py 20 stopwords.txt 
+----------------------------------------------------------------------
+Seed URL: http://lyle.smu.edu/~fmoore
+Page limit: 20
+Stop words: stopwords.txt
+----------------------------------------------------------------------
+Beginning crawling...
+
+robots.txt: Disallowed['/~fmoore/dontgohere/'] Allowed[]
+
+1. Visiting: /~fmoore/ (Freeman Moore - SMU Spring 2018)
+2. Visiting: /~fmoore/CSE7337_syllabus.pdf (CSE7337_syllabus.pdf)
+3. Visiting: /~fmoore/CSE5337_syllabus.pdf (CSE5337_syllabus.pdf)
+4. Visiting: /~fmoore/schedule.htm (SMU CSE 5337/7337 Spring 2018 Schedule)
+5. Visiting: /~fmoore/misc/exam1.html (CSE 7337 Spring 2018 distance students exam 1 location)
+6. Visiting: /~fmoore/misc/useragent.php (CSE 5337/7337 User-Agent)
+7. Visiting: /~fmoore/misc/example-2018-02-27.xlsx (example-2018-02-27.xlsx)
+8. Visiting: /~fmoore/misc/bigram-example.jpg (bigram-example.jpg)
+9. Visiting: /~fmoore/misc/permutermindex-example.jpg (permutermindex-example.jpg)
+Not allowed: /~fmoore/dontgohere/wordlist.txt
+10. Visiting: /~fmoore/misc/levenshtein.html (Levenshtein Distance demo)
+11. Visiting: /~fmoore/misc/sim-example-2018-02-15.xlsx (sim-example-2018-02-15.xlsx)
+12. Visiting: /~fmoore/misc/figure6-12.xlsx (figure6-12.xlsx)
+13. Visiting: /~fmoore/misc/mercator-article.pdf (mercator-article.pdf)
+14. Visiting: /~fmoore/misc/porter_stemmer_example.html (Porter Stemmer Online)
+15. Visiting: /~fmoore/misc/CACM-Internet-Advertising-Oct-2017.pdf (CACM-Internet-Advertising-Oct-2017.pdf)
+16. Visiting: /~fmoore/misc/algorithm-1-7.pdf (algorithm-1-7.pdf)
+17. Visiting: /~fmoore/misc/IEEE-Spectrum-The-Dark-Dialect-Oct-2017.pdf (IEEE-Spectrum-The-Dark-Dialect-Oct-2017.pdf)
+18. Visiting: /~fmoore/index_duplicate.htm (Freeman Moore - SMU Spring 2018)
+19. Visiting: /~fmoore/index.htm (Freeman Moore - SMU Spring 2018)
+20. Visiting: /~fmoore/index-fall2017.htm (Freeman Moore - SMU Fall 2017)
+
+Done crawling.
+----------------------------------------------------------------------
+ Visited URLs: 20
+
+ Outgoing URLs: 
+  +  http://lyle.smu.edu
+  +  http://www.gedpage.com/soundex.html
+  +  http://www.smu.edu/EnrollmentServices/Registrar/Enrollment/FinalExamSchedule/Spring2018
+  +  http://tartarus.org/~martin/PorterStemmer/
+  +  http://en.wikipedia.org/wiki/Document_classification
+  +  http://en.wikipedia.org/wiki/Stop_words
+  +  http://en.wikipedia.org/wiki/Tf*idf
+  +  http://lucene.apache.org/core/
+  +  http://search.carrot2.org/stable/search
+  +  http://9ol.es/porter_js_demo.html
+  +  http://oracle.com.edgesuite.net/timeline/oracle/
+
+ Broken URLs: 
+  +  mailto:fmoore@smu.edu
+  +  http://lyle.smu.edu/~fmoore/this_aint_gonna_work.htm
+  +  http://lyle.smu.edu/~fmoore/misc/count_letters_duplicate.txt
+  +  http://lyle.smu.edu/~fmoore/misc/count_letters.txt
+  +  http://lyle.smu.edu/~fmoore/does_not_exist.htm
+  +  mailto:fmoore@lyle.smu.edu
+
+ Graphic URLs: 
+  +  http://lyle.smu.edu/~fmoore/misc/bigram-example.jpg
+  +  http://lyle.smu.edu/~fmoore/misc/permutermindex-example.jpg
+
+Duplicate URLs:
+	 +  Doc1:
+		  +  http://lyle.smu.edu/~fmoore/
+		  +  http://lyle.smu.edu/~fmoore/index_duplicate.htm
+		  +  http://lyle.smu.edu/~fmoore/index.htm
+
+----------------------------------------------------------------------
+Most Common Stemmed Terms:
+
+Term                       Term Frequency        Document Frequency
+----                       --------------        ------------------
+1. chpt                                14                         1
+2. hmwk                                11                         5
+3. and                                 11                         1
+4. stem                                 9                         5
+5. cse                                  9                         1
+6. var                                  8                         4
+7. spring                               8                         3
+8. moor                                 8                         2
+9. freeman                              8                         2
+10. due                                 8                         1
+11. assign                              8                         1
+12. distanc                             7                         3
+13. site                                6                         3
+14. may                                 6                         3
+15. lent                                5                         2
+16. lens1                               5                         2
+17. len                                 5                         2
+18. fall                                5                         1
+19. exampl                              5                         1
+20. exam                                5                         1
+----------------------------------------------------------------------
+
+Complete frequency matrix has been exported to tf_matrix.csv
+
+
+Goodbye!
+
+Erics-MacBook-Pro:Web-Crawler ericsmith$ 
+
+
+
+
+
+
+
+
+
+
+
+
