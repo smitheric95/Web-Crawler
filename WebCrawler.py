@@ -34,10 +34,10 @@ class WebCrawler:
 
     # print the report produced from crawling a site
     def __str__(self):
-        report = "\n Visited URLs: " + str(len(self.visited_urls)) \
-                 + "\n\n Outgoing URLs: " + "\n  +  " + "\n  +  ".join(self.outgoing_urls) \
-                 + "\n\n Broken URLs: " + "\n  +  " + "\n  +  ".join(self.broken_urls) \
-                 + "\n\n Graphic URLs: " + "\n  +  " + "\n  +  ".join(self.graphic_urls) \
+        report = "\nVisited URLs: " + str(len(self.visited_urls)) \
+                 + "\n\nOutgoing URLs: " + "\n  +  " + "\n  +  ".join(self.outgoing_urls) \
+                 + "\n\nBroken URLs: " + "\n  +  " + "\n  +  ".join(self.broken_urls) \
+                 + "\n\nGraphic URLs: " + "\n  +  " + "\n  +  ".join(self.graphic_urls) \
                  + "\n\nDuplicate URLs:\n"
 
         # print duplicate urls

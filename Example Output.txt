@@ -32,9 +32,9 @@ Not allowed: /~fmoore/dontgohere/wordlist.txt
 
 Done crawling.
 ----------------------------------------------------------------------
- Visited URLs: 20
+Visited URLs: 20
 
- Outgoing URLs: 
+Outgoing URLs: 
   +  http://lyle.smu.edu
   +  http://oracle.com.edgesuite.net/timeline/oracle/
   +  http://www.gedpage.com/soundex.html
@@ -48,7 +48,7 @@ Done crawling.
   +  http://search.carrot2.org/stable/search
   +  http://9ol.es/porter_js_demo.html
 
- Broken URLs: 
+Broken URLs: 
   +  mailto:fmoore@smu.edu
   +  mailto:fmoore@lyle.smu.edu
   +  http://lyle.smu.edu/~fmoore/syl_5330.pdf
@@ -57,7 +57,7 @@ Done crawling.
   +  http://lyle.smu.edu/~fmoore/misc/count_letters.txt
   +  http://lyle.smu.edu/~fmoore/misc/count_letters_duplicate.txt
 
- Graphic URLs: 
+Graphic URLs: 
   +  http://lyle.smu.edu/~fmoore/misc/permutermindex-example.jpg
   +  http://lyle.smu.edu/~fmoore/misc/bigram-example.jpg
 
