@@ -142,7 +142,7 @@ class WebCrawler:
         '''
         while self.url_frontier and (self.page_limit is None or num_pages_crawled < self.page_limit):
             # current_page refers to the url of the current page being processed
-            current_page = self.url_frontier.pop()  # select the next url
+            current_page = self.url_frontier.pop(0)  # select the next url
 
             # calculate present working directory
             pwd = "/".join(current_page.split("/")[:-1]) + "/"
@@ -312,16 +312,17 @@ if __name__ == "__main__":
         print(crawler)
 
         [print("-", end="") for x in range(70)]
+        print("\n\nBuilding Term Frequency matrix...\n")
 
         crawler.build_frequency_matrix()
 
-        print("\nMost Common Stemmed Terms:\n")
+        print("Most Common Stemmed Terms:\n")
         print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
         print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
 
         count = 1
         for i, j, k in crawler.n_most_common(20):
-            print("{: <15} {: >25} {: >25}".format((str(count) + ". " + i),j,k))
+            print("{: <15} {: >25} {: >25}".format((str(count) + ". " + i), j, k))
             count += 1
 
         [print("-", end="") for x in range(70)]
