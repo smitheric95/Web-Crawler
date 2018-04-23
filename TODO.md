@@ -29,4 +29,6 @@
     
  questions for prof:
     - if you add .25, does that go over 1.0?
-    - format of thesaurus as a CSV passed by optional command line argument? 
+    - format of thesaurus as a CSV passed by optional command line argument?
+    - do we need to keep things like showing the term frequency matrix? 
+    - how do duplicates come into play in clustering?
