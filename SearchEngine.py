@@ -18,10 +18,31 @@ class SearchEngine(WebCrawler):
         self.thesaurus = thesaurus
 
     def display_menu(self):
-        print("test1\n"
-              "test2")
+        print("#######################################\n"
+              "#    Eric's Search Engine             #\n"
+              "#                                     #\n"
+              "#    [0] Exit                         #\n"
+              "#    [1] Build Index                  #\n"
+              "#    [2] Search Documents             #\n"
+              "#######################################\n\n")
 
+        while True:
+            # prompt user for initial menu selection
+            main_menu_input = "-1"
+            while main_menu_input.isdigit() is False or int(main_menu_input) not in range(0, 3):
+                main_menu_input = input("Please select an option: ")
 
+            # user wants to crawl
+            if int(main_menu_input) == 1:
+                print("building index...")
+            # user wants to enter search query
+            elif int(main_menu_input) == 2:
+                if len(self.visited_urls) == 0:
+                    print("You must build the index first.")
+            else:
+                break
+
+        print("\nGoodbye!")
 if __name__ == "__main__":
     # import crawler from file
     # f = open("crawler.obj", "rb")
@@ -36,19 +57,18 @@ if __name__ == "__main__":
     parser.add_argument("-s", "--stopwords",
                         help="Stop words file: a newline separated list of stop words. (Default is stopwords.txt)", required=False, default="stopwords.txt")
     parser.add_argument("-t", "--thesaurus",
-                        help="Thesaurus file: a comma separated list of words and their synonyms. (Default is thesaurus.csv)",
-                        required=False, default="thesaurus.csv")
+                        help="Thesaurus file: a comma separated list of words and their synonyms. (Default is thesaurus.csv)", required=False, default="thesaurus.csv")
 
     argument = parser.parse_args()
 
+    # set attributes based off arguments
     search_engine.set_page_limit(argument.pagelimit)
-
     if argument.stopwords:
         search_engine.set_stop_words(argument.stopwords)
-
     if argument.thesaurus:
         search_engine.set_thesaurus(argument.thesaurus)
 
 
-    search_engine.display_menu()
 
+
+    search_engine.display_menu()
