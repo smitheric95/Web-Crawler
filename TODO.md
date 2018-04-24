@@ -18,7 +18,7 @@
     - handle stop-words (ignore?)
     - see example queries in requirements
   
-- Cosine sim
+- Cosine sim:
     - execute against query vs each leader document
     - what query weighting scheme?
     - if any query words in <title>, add +0.25 to score
@@ -27,8 +27,12 @@
         - also display first 20 words in doc (can be stemmed)
         - If less than K/2 documents are returned for a query, rerun the query using thesaurus expansion.    
     
+ - etc:
+    - add exceptions to parsing stopwords.txt and thesaurus.csv
+    
  questions for prof:
     - if you add .25, does that go over 1.0?
     - format of thesaurus as a CSV passed by optional command line argument?
     - do we need to keep things like showing the term frequency matrix? 
     - how do duplicates come into play in clustering?
+    - do stopwords and thesaurus HAVE to be passed to the program
