@@ -77,6 +77,7 @@ class WebCrawler:
 
     # sets the stop words list given a file with stop words separated by line
     def set_stop_words(self, filepath):
+        self.stop_words_file = filepath
         with open(filepath, "r") as stop_words_file:
             stop_words = stop_words_file.readlines()
 
@@ -223,7 +224,6 @@ class WebCrawler:
 
             else:
                 print("Not allowed: " + current_page.replace(self.domain_url, ""))
-        print("\nDone crawling.")
 
     '''
     convert word listings into term-document frequency matrix

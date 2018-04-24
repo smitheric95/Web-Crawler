@@ -24,17 +24,63 @@ class SearchEngine(WebCrawler):
               "#    [0] Exit                         #\n"
               "#    [1] Build Index                  #\n"
               "#    [2] Search Documents             #\n"
-              "#######################################\n\n")
+              "#######################################\n")
 
         while True:
             # prompt user for initial menu selection
             main_menu_input = "-1"
             while main_menu_input.isdigit() is False or int(main_menu_input) not in range(0, 3):
-                main_menu_input = input("Please select an option: ")
+                main_menu_input = input("\nPlease select an option: ")
 
             # user wants to crawl
             if int(main_menu_input) == 1:
-                print("building index...")
+                # print info about user choices
+                [print("-", end="") for x in range(70)]
+                print("\nSeed URL: " + self.seed_url)
+                print("Page limit: " + str(self.page_limit))
+                print("Stop words: " + str(self.stop_words_file))
+                [print("-", end="") for x in range(70)]
+
+                # build index
+                print("\nBeginning crawling...\n")
+                search_engine.crawl()
+                print("\nIndex built.")
+
+                # ask user if they want to see optional output
+                info_input = "-1"
+                while info_input != "y" and info_input != "n":
+                    info_input = input("Would you like to see info about the pages crawled? (y/n)").lower()
+
+                # show user crawler duplicates, broken urls, etc
+                if info_input == "y":
+                    search_engine.produce_duplicates()
+
+                    [print("-", end="") for x in range(70)]
+                    print(search_engine)
+                    [print("-", end="") for x in range(70)]
+
+                # ask user if they want to see tf matrix
+                tf_input = "-1"
+                while tf_input != "y" and tf_input != "n":
+                    tf_input = input("\nWould you like to see a term frequency matrix? (y/n)").lower()
+
+                # show user tf matrix
+                if tf_input == "y":
+                    [print("-", end="") for x in range(70)]
+                    print("\n\nBuilding Term Frequency matrix...\n")
+
+                    search_engine.build_frequency_matrix()
+                    
+                    print("Most Common Stemmed Terms:\n")
+                    print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
+                    print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
+                    count = 1
+                    for i, j, k in search_engine.n_most_common(20):
+                        print("{: <15} {: >25} {: >25}".format((str(count) + ". " + i), j, k))
+                        count += 1
+
+                    [print("-", end="") for x in range(70)]
+
             # user wants to enter search query
             elif int(main_menu_input) == 2:
                 if len(self.visited_urls) == 0:
