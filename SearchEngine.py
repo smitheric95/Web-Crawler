@@ -18,7 +18,7 @@ class SearchEngine(WebCrawler):
         self.thesaurus = thesaurus
 
     def display_menu(self):
-        print("test1"
+        print("test1\n"
               "test2")
 
 
@@ -41,7 +41,7 @@ if __name__ == "__main__":
 
     argument = parser.parse_args()
 
-    search_engine.set_page_limit(argument.page_limit)
+    search_engine.set_page_limit(argument.pagelimit)
 
     if argument.stopwords:
         search_engine.set_stop_words(argument.stopwords)
@@ -49,4 +49,6 @@ if __name__ == "__main__":
     if argument.thesaurus:
         search_engine.set_thesaurus(argument.thesaurus)
 
+
+    search_engine.display_menu()
 
