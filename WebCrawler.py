@@ -45,7 +45,7 @@ class WebCrawler:
         # print duplicate urls
         for key in range(len(self.duplicate_urls.keys())):
             report += "\t +  Doc" + str(key + 1) + ":\n"
-            for val in list(crawler.duplicate_urls.values())[key]:
+            for val in list(self.duplicate_urls.values())[key]:
                 report += "\t\t  +  " + val + "\n"
 
         return report
@@ -336,10 +336,10 @@ if __name__ == "__main__":
         [print("-", end="") for x in range(70)]
 
         # export frequency matrix to file
-        # print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
-        # f = open("tf_matrix.csv", "w")
-        # f.write(crawler.print_frequency_matrix())
-        # f.close()
+        print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
+        f = open("tf_matrix.csv", "w")
+        f.write(crawler.print_frequency_matrix())
+        f.close()
 
         # export crawler to file
         # f = open("crawler.obj", 'wb')

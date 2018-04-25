@@ -9,6 +9,7 @@ import pickle
 import sys
 import argparse
 
+
 class SearchEngine(WebCrawler):
     def __init__(self, seed_url):
         super().__init__(seed_url)
@@ -16,6 +17,9 @@ class SearchEngine(WebCrawler):
 
     def set_thesaurus(self, thesaurus):
         self.thesaurus = thesaurus
+
+    # def k_means(self):
+
 
     def display_menu(self):
         print("#######################################\n"
@@ -70,7 +74,7 @@ class SearchEngine(WebCrawler):
                     print("\n\nBuilding Term Frequency matrix...\n")
 
                     search_engine.build_frequency_matrix()
-                    
+
                     print("Most Common Stemmed Terms:\n")
                     print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
                     print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
@@ -81,14 +85,26 @@ class SearchEngine(WebCrawler):
 
                     [print("-", end="") for x in range(70)]
 
+                    # export frequency matrix to file
+                    f = open("tf_matrix.csv", "w")
+                    f.write(search_engine.print_frequency_matrix())
+                    f.close()
+                    print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
+
             # user wants to enter search query
             elif int(main_menu_input) == 2:
                 if len(self.visited_urls) == 0:
                     print("You must build the index first.")
+                else:
+                    # prompt user to enter query
+                    query_input = input("\nPlease enter a query:")
+                    print("You entered: " + query_input)
             else:
                 break
 
         print("\nGoodbye!")
+
+
 if __name__ == "__main__":
     # import crawler from file
     # f = open("crawler.obj", "rb")
@@ -114,7 +130,5 @@ if __name__ == "__main__":
     if argument.thesaurus:
         search_engine.set_thesaurus(argument.thesaurus)
 
-
-
-
+    # show main menu to user
     search_engine.display_menu()

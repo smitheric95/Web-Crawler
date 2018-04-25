@@ -5,6 +5,7 @@
     - Describe decisions on how to handle questions in requirements
     
 - Clustering:
+    * based off the documents that were exported to tf_matrix.csv *
     - Max 60 documents
     - Cluster in 5 leader/follower sets (K-Means?)
         - How did you determine the leader?
@@ -29,10 +30,14 @@
     
  - etc:
     - add exceptions to parsing stopwords.txt and thesaurus.csv
+    - add clear output and show main menu to display_menu()
+    - should I stem words in the docs?
+    - add user agent
     
  questions for prof:
-    - if you add .25, does that go over 1.0?
-    - format of thesaurus as a CSV passed by optional command line argument?
-    - do we need to keep things like showing the term frequency matrix? 
-    - how do duplicates come into play in clustering?
-    - do stopwords and thesaurus HAVE to be passed to the program
+ yes  - if you add .25, does that go over 1.0?
+ x   - format of thesaurus as a CSV passed by optional command line argument?
+ x   - do we need to keep things like showing the term frequency matrix? 
+no they should be ignored    - how do duplicates come into play in clustering?
+ x   - do stopwords and thesaurus HAVE to be passed to the program
+ x   - what's the cos threshold for it a document is returned?
