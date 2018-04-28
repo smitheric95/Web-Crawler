@@ -16,7 +16,7 @@ class SearchEngine(WebCrawler):
     def __init__(self, seed_url):
         super().__init__(seed_url)
         self.thesaurus = None
-        self.clusters = None
+        self.clusters = None  # {leader: [ (follower0, distance0) .. (followerN, distanceN) ]}
 
     def set_thesaurus(self, thesaurus):
         self.thesaurus = thesaurus
@@ -42,7 +42,7 @@ class SearchEngine(WebCrawler):
         leader_indices = random.sample(range(0, len(X)), k)
         follower_indices = list(set([i for i in range(len(X))]) - set(leader_indices))
 
-        # stores leader: [followers]
+        # stores leader: [(follower, distance)]
         clusters = {l: [] for l in leader_indices}
 
         # assign each follower to its closest leader
@@ -56,9 +56,18 @@ class SearchEngine(WebCrawler):
                     min_dist = cur_dist
                     min_dist_index = l
 
-            clusters[min_dist_index].append(f)
+            clusters[min_dist_index].append((f, min_dist[0][0]))
 
         self.clusters = clusters
+
+    def display_clusters(self):
+        if self.clusters is not None:
+            for leader, followers in self.clusters.items():
+                print("Doc" + str(leader) + ":")
+                for follower in followers:
+                    print("\t\t+ Doc" + str(follower[0]) + " (Distance: " + str(follower[1]) + ")")
+        else:
+            print("Documents not yet clustered.")
 
     def display_menu(self):
         print("#######################################\n"
@@ -117,7 +126,7 @@ class SearchEngine(WebCrawler):
                 # ask user if they want to see tf matrix
                 tf_input = "-1"
                 while tf_input != "y" and tf_input != "n":
-                    tf_input = input("\nWould you like to see the term frequency matrix? (y/n)").lower()
+                    tf_input = input("\nWould you like to see the term frequency matrix? (y/n) \n\n").lower()
 
                 # show user tf matrix
                 if tf_input == "y":
@@ -133,7 +142,15 @@ class SearchEngine(WebCrawler):
 
                 # cluster docs
                 self.cluster_docs()
-                print("clustered")
+
+                # ask user if they want to see clustering
+                c_input = "-1"
+                while c_input != "y" and c_input != "n":
+                    c_input = input("Documents clustered. Would you like to see their clustering? (y/n) \n\n").lower()
+
+                # show clustering
+                if c_input == "y":
+                    self.display_clusters()
 
             # user wants to enter search query
             elif int(main_menu_input) == 2:
