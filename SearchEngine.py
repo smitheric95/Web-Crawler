@@ -8,18 +8,57 @@ from WebCrawler import WebCrawler
 import pickle
 import sys
 import argparse
-
+import numpy as np
+import random
+from sklearn.metrics.pairwise import euclidean_distances
 
 class SearchEngine(WebCrawler):
     def __init__(self, seed_url):
         super().__init__(seed_url)
         self.thesaurus = None
+        self.clusters = None
 
     def set_thesaurus(self, thesaurus):
         self.thesaurus = thesaurus
 
-    # def k_means(self):
+    """
+    clusters tf matrix into k pairs of leaders and followers
+    populates self.clusters
+    """
+    def cluster_docs(self, k=5):
+        # transpose tf matrix
+        X = np.matrix([list(x) for x in zip(*self.frequency_matrix)])
 
+        # normalize term frequencies
+        X_max, X_min = X.max(), X.min()
+        X = (X - X_min) / (X_max - X_min)
+
+        if len(X) < k:
+            print("Warning: not enough documents to pick " + str(k) + " leaders.")
+            k = int(len(X) / 2)
+            print("Clustering around " + str(k) + " leaders.")
+
+        # pick a random sample of k docs to be leaders
+        leader_indices = random.sample(range(0, len(X)), k)
+        follower_indices = list(set([i for i in range(len(X))]) - set(leader_indices))
+
+        # stores leader: [followers]
+        clusters = {l: [] for l in leader_indices}
+
+        # assign each follower to its closest leader
+        for f in follower_indices:
+            min_dist = sys.maxsize
+            min_dist_index = -1
+
+            for l in leader_indices:
+                cur_dist = euclidean_distances(X[f], X[l])
+                if cur_dist < min_dist:
+                    min_dist = cur_dist
+                    min_dist_index = l
+
+            clusters[min_dist_index].append(f)
+
+        self.clusters = clusters
 
     def display_menu(self):
         print("#######################################\n"
@@ -63,18 +102,25 @@ class SearchEngine(WebCrawler):
                     print(search_engine)
                     [print("-", end="") for x in range(70)]
 
+                # build tf matrix to be used for clustering
+                [print("-", end="") for x in range(70)]
+                print("\n\nBuilding Term Frequency matrix...", end="")
+                search_engine.build_frequency_matrix()
+                print(" Done.")
+
+                # export frequency matrix to file
+                f = open("tf_matrix.csv", "w")
+                f.write(search_engine.print_frequency_matrix())
+                f.close()
+                print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
+
                 # ask user if they want to see tf matrix
                 tf_input = "-1"
                 while tf_input != "y" and tf_input != "n":
-                    tf_input = input("\nWould you like to see a term frequency matrix? (y/n)").lower()
+                    tf_input = input("\nWould you like to see the term frequency matrix? (y/n)").lower()
 
                 # show user tf matrix
                 if tf_input == "y":
-                    [print("-", end="") for x in range(70)]
-                    print("\n\nBuilding Term Frequency matrix...\n")
-
-                    search_engine.build_frequency_matrix()
-
                     print("Most Common Stemmed Terms:\n")
                     print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
                     print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
@@ -85,11 +131,9 @@ class SearchEngine(WebCrawler):
 
                     [print("-", end="") for x in range(70)]
 
-                    # export frequency matrix to file
-                    f = open("tf_matrix.csv", "w")
-                    f.write(search_engine.print_frequency_matrix())
-                    f.close()
-                    print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
+                # cluster docs
+                self.cluster_docs()
+                print("clustered")
 
             # user wants to enter search query
             elif int(main_menu_input) == 2:
@@ -124,11 +168,35 @@ if __name__ == "__main__":
     argument = parser.parse_args()
 
     # set attributes based off arguments
-    search_engine.set_page_limit(argument.pagelimit)
-    if argument.stopwords:
-        search_engine.set_stop_words(argument.stopwords)
-    if argument.thesaurus:
-        search_engine.set_thesaurus(argument.thesaurus)
+    if int(argument.pagelimit) > 1:
+        search_engine.set_page_limit(argument.pagelimit)
 
-    # show main menu to user
-    search_engine.display_menu()
+        if argument.stopwords:
+            search_engine.set_stop_words(argument.stopwords)
+        if argument.thesaurus:
+            search_engine.set_thesaurus(argument.thesaurus)
+
+        # show main menu to user
+        search_engine.display_menu()
+    else:
+        print("Sorry. You must crawl a minimum of 2 pages. Otherwise, why would you need a search engine?")
+
+    # SCRATCH #
+    # search_engine.crawl()
+    # search_engine.build_frequency_matrix()
+    # print("Built tf matrix.")
+    # search_engine.print_frequency_matrix()
+    #
+    # X = [list(x) for x in zip(*search_engine.frequency_matrix)] # transpose
+    # # export frequency matrix to file
+    # f = open("tf_matrix.csv", "w")
+    # f.write(search_engine.print_frequency_matrix())
+    # f.close()
+    # print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
+
+
+
+
+
+
+# why only 3 docs in freq matrix?

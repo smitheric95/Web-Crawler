@@ -7,7 +7,9 @@
 - Clustering:
     * based off the documents that were exported to tf_matrix.csv *
     - Max 60 documents
-    - Cluster in 5 leader/follower sets (K-Means?)
+    - Cluster in 5 leader/follower sets 
+        - what if there's not enough docs?
+        - pick leaders, assign closest!
         - How did you determine the leader?
         - List leader-id, doc-id, and "score"? for each *pair*
         
@@ -33,6 +35,7 @@
     - add clear output and show main menu to display_menu()
     - should I stem words in the docs?
     - add user agent
+    - "press enter to continue" after printing optional info
     
  questions for prof:
  yes  - if you add .25, does that go over 1.0?
