@@ -21,6 +21,25 @@ class SearchEngine(WebCrawler):
     def set_thesaurus(self, thesaurus):
         self.thesaurus = thesaurus
 
+    # loads index from disk
+    def load_index(self):
+        try:
+            f = open("exported_index.obj", "rb")
+        except IOError:
+            print("Error opening \"exported_index.obj\" :(")
+            return 0
+
+        tmp_dict = pickle.load(f)
+        f.close()
+
+        self.__dict__.update(tmp_dict)
+
+    # saves index from disk
+    def save_index(self):
+        f = open("exported_index.obj", 'wb')
+        pickle.dump(self.__dict__, f)
+        f.close()
+
     """
     clusters tf matrix into k pairs of leaders and followers
     populates self.clusters
@@ -84,73 +103,91 @@ class SearchEngine(WebCrawler):
             while main_menu_input.isdigit() is False or int(main_menu_input) not in range(0, 3):
                 main_menu_input = input("\nPlease select an option: ")
 
-            # user wants to crawl
+            # user wants to build index (crawl)
             if int(main_menu_input) == 1:
-                # print info about user choices
-                [print("-", end="") for x in range(70)]
-                print("\nSeed URL: " + self.seed_url)
-                print("Page limit: " + str(self.page_limit))
-                print("Stop words: " + str(self.stop_words_file))
-                [print("-", end="") for x in range(70)]
+                import_input = "-1"
+                while import_input != "y" and import_input != "n":
+                    import_input = input("Would you like to import the index from disk? (y/n)").lower()
 
-                # build index
-                print("\nBeginning crawling...\n")
-                search_engine.crawl()
-                print("\nIndex built.")
+                # import the index from file
+                if import_input == "y":
+                    self.load_index()
 
-                # ask user if they want to see optional output
-                info_input = "-1"
-                while info_input != "y" and info_input != "n":
-                    info_input = input("Would you like to see info about the pages crawled? (y/n)").lower()
-
-                # show user crawler duplicates, broken urls, etc
-                if info_input == "y":
-                    search_engine.produce_duplicates()
-
+                # crawl site to build index
+                else:
+                    # print info about user choices
                     [print("-", end="") for x in range(70)]
-                    print(search_engine)
+                    print("\nSeed URL: " + self.seed_url)
+                    print("Page limit: " + str(self.page_limit))
+                    print("Stop words: " + str(self.stop_words_file))
                     [print("-", end="") for x in range(70)]
 
-                # build tf matrix to be used for clustering
-                [print("-", end="") for x in range(70)]
-                print("\n\nBuilding Term Frequency matrix...", end="")
-                search_engine.build_frequency_matrix()
-                print(" Done.")
+                    # build index
+                    print("\nBeginning crawling...\n")
+                    search_engine.crawl()
+                    print("\nIndex built.")
 
-                # export frequency matrix to file
-                f = open("tf_matrix.csv", "w")
-                f.write(search_engine.print_frequency_matrix())
-                f.close()
-                print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
+                    # ask user if they want to see optional output
+                    info_input = "-1"
+                    while info_input != "y" and info_input != "n":
+                        info_input = input("Would you like to see info about the pages crawled? (y/n)").lower()
 
-                # ask user if they want to see tf matrix
-                tf_input = "-1"
-                while tf_input != "y" and tf_input != "n":
-                    tf_input = input("\nWould you like to see the term frequency matrix? (y/n) \n\n").lower()
+                    # show user crawler duplicates, broken urls, etc
+                    if info_input == "y":
+                        search_engine.produce_duplicates()
 
-                # show user tf matrix
-                if tf_input == "y":
-                    print("Most Common Stemmed Terms:\n")
-                    print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
-                    print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
-                    count = 1
-                    for i, j, k in search_engine.n_most_common(20):
-                        print("{: <15} {: >25} {: >25}".format((str(count) + ". " + i), j, k))
-                        count += 1
+                        [print("-", end="") for x in range(70)]
+                        print(search_engine)
+                        [print("-", end="") for x in range(70)]
 
+                    # build tf matrix to be used for clustering
                     [print("-", end="") for x in range(70)]
+                    print("\n\nBuilding Term Frequency matrix...", end="")
+                    search_engine.build_frequency_matrix()
+                    print(" Done.")
 
-                # cluster docs
-                self.cluster_docs()
+                    # export frequency matrix to file
+                    f = open("tf_matrix.csv", "w")
+                    f.write(search_engine.print_frequency_matrix())
+                    f.close()
+                    print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
 
-                # ask user if they want to see clustering
-                c_input = "-1"
-                while c_input != "y" and c_input != "n":
-                    c_input = input("Documents clustered. Would you like to see their clustering? (y/n) \n\n").lower()
+                    # ask user if they want to see tf matrix
+                    tf_input = "-1"
+                    while tf_input != "y" and tf_input != "n":
+                        tf_input = input("\nWould you like to see the term frequency matrix? (y/n) \n\n").lower()
 
-                # show clustering
-                if c_input == "y":
-                    self.display_clusters()
+                    # show user tf matrix
+                    if tf_input == "y":
+                        print("Most Common Stemmed Terms:\n")
+                        print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
+                        print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
+                        count = 1
+                        for i, j, k in search_engine.n_most_common(20):
+                            print("{: <15} {: >25} {: >25}".format((str(count) + ". " + i), j, k))
+                            count += 1
+
+                        [print("-", end="") for x in range(70)]
+
+                    # cluster docs
+                    self.cluster_docs()
+
+                    # ask user if they want to see clustering
+                    c_input = "-1"
+                    while c_input != "y" and c_input != "n":
+                        c_input = input("\nDocuments clustered. Would you like to see their clustering? (y/n) \n\n").lower()
+
+                    # show clustering
+                    if c_input == "y":
+                        self.display_clusters()
+
+                    b_input = "-1"
+                    while b_input != "y" and b_input != "n":
+                        b_input = input("\nWould you like to export this index to disk? (y/n)").lower()
+
+                    if b_input == "y":
+                        self.save_index()
+                        print("Exported to \"exported_index.obj\".")
 
             # user wants to enter search query
             elif int(main_menu_input) == 2:
@@ -167,11 +204,6 @@ class SearchEngine(WebCrawler):
 
 
 if __name__ == "__main__":
-    # import crawler from file
-    # f = open("crawler.obj", "rb")
-    # search_engine = pickle.load(f)  # crawler.crawl()
-    # f.close()
-
     search_engine = SearchEngine("http://lyle.smu.edu/~fmoore")
 
     # handle command line arguments
@@ -197,23 +229,3 @@ if __name__ == "__main__":
         search_engine.display_menu()
     else:
         print("Sorry. You must crawl a minimum of 2 pages. Otherwise, why would you need a search engine?")
-
-    # SCRATCH #
-    # search_engine.crawl()
-    # search_engine.build_frequency_matrix()
-    # print("Built tf matrix.")
-    # search_engine.print_frequency_matrix()
-    #
-    # X = [list(x) for x in zip(*search_engine.frequency_matrix)] # transpose
-    # # export frequency matrix to file
-    # f = open("tf_matrix.csv", "w")
-    # f.write(search_engine.print_frequency_matrix())
-    # f.close()
-    # print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
-
-
-
-
-
-
-# why only 3 docs in freq matrix?
