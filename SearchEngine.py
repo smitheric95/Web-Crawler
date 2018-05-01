@@ -116,7 +116,9 @@ class SearchEngine(WebCrawler):
         print()
 
     def display_menu(self):
-        while True:
+        run_program = True  # flag for continuing program
+
+        while run_program:
             self.show_main_menu()
 
             # prompt user for initial menu selection
@@ -221,14 +223,24 @@ class SearchEngine(WebCrawler):
                 if len(self.visited_urls) == 0:
                     print("You must build the index first.")
                 else:
-                    # prompt user to enter query
-                    query_input = input("\nPlease enter a query:")
-                    print("You entered: " + query_input)
+                    while True:
+                        # prompt user to enter query
+                        query_input = input("\nPlease enter a query:")
 
-                    if self.validate_query(query_input):
-                        print("valid query")
-                    else:
-                        print('invalid')
+                        # remove leading and trailing white space
+                        query_input = query_input.strip()
+
+                        # query is valid
+                        if self.validate_query(query_input):
+                            query_input = query_input.split(" ")
+
+                            # stop program if user enters "stop"
+                            if "stop" in query_input:
+                                print("stop!")
+                                run_program = False
+                                break
+                        else:
+                            print("Invalid query.")
             else:
                 break
 
