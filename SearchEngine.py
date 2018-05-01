@@ -11,6 +11,8 @@ import argparse
 import numpy as np
 import random
 from sklearn.metrics.pairwise import euclidean_distances
+from nltk.stem import PorterStemmer
+import math
 
 
 class SearchEngine(WebCrawler):
@@ -86,6 +88,36 @@ class SearchEngine(WebCrawler):
             clusters[min_dist_index].append((f, min_dist[0][0]))
 
         self.clusters = clusters
+
+    # returns a normalized list
+    def normalize_list(self, input_list):
+        # compute the square root of the sum of squares in the list (norm of list)
+        l_norm = math.sqrt(sum([l**2 for l in input_list]))
+
+        # normalize list by dividing each element by the norm of list
+        return [l/l_norm for l in input_list]
+
+    # returns cos sim between query and document
+    def cosine_similarity(self, query, doc):
+        # normalize query and doc
+        query = self.normalize_list(query)
+        doc = self.normalize_list(doc)
+
+
+    # compares a valid user query to each document and returns a list of results
+    def process_query(self, query):
+        # split into list
+        query = query.split(" ")
+
+        # remove stop words
+        query = [q for q in query if q not in self.stop_words]
+
+        # stem terms in query
+        stemmer = PorterStemmer()
+        query = [stemmer.stem(q) for q in query]
+
+        # filter out terms that aren't in any of the documents
+        query = [q for q in query if q in self.all_terms]
 
     def display_clusters(self):
         if self.clusters is not None:
@@ -227,18 +259,18 @@ class SearchEngine(WebCrawler):
                         # prompt user to enter query
                         query_input = input("\nPlease enter a query:")
 
-                        # remove leading and trailing white space
-                        query_input = query_input.strip()
-
                         # query is valid
                         if self.validate_query(query_input):
-                            query_input = query_input.split(" ")
-
                             # stop program if user enters "stop"
                             if "stop" in query_input:
                                 print("stop!")
                                 run_program = False
                                 break
+
+                            # process the query for searching
+                            else:
+                                self.process_query(query_input)
+
                         else:
                             print("Invalid query.")
             else:

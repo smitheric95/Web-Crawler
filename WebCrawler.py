@@ -31,7 +31,7 @@ class WebCrawler:
         self.broken_urls = []
         self.graphic_urls = []
         self.words = {}  # DocumentID : [words]
-        self.all_terms = []  # set of all terms in all documents
+        self.all_terms = []  # set of all stemmed terms in all documents
         self.frequency_matrix = []  # Term doc frequency matrix (row=term, col=doc)
 
     # print the report produced from crawling a site

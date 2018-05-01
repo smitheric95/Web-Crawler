@@ -4,18 +4,15 @@
     - Describe in detail what has changed
     - Describe decisions on how to handle questions in requirements
         - How did you determine the leader?
+        - non-dict words: keep them (moore, etc) 
+        - ignore stop words
             
 - Querying:
-    - accept multiple words from user
-        - words are separated by spaces
-        - "stop" stops the program 
-    - handle non-dictionary words (ignore? or give suggestions?)
-    - handle stop-words (ignore?)
     - see example queries in requirements
   
 - Cosine sim:
-    - execute against query vs each leader document
-    - what query weighting scheme?
+    - execute against query vs each document
+    - what doc/query weighting scheme?
     - if any query words in <title>, add +0.25 to score
     - display score, doc url and title in descending order for top K=6 results
         - explain why you think these are correct
