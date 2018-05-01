@@ -24,19 +24,12 @@
     
  - etc:
     - add exceptions to parsing stopwords.txt and thesaurus.csv
-    - add clear output and show main menu to display_menu()
     - should I stem words in the docs?
     - add user agent
-    - "exported from disk" message
-    - "press enter to continue" after printing optional info
-    - make functions out of display_menu
     - replace all input instances with just one variable
         - make it a function?
     - clean up output 
         - make consistent
-        - use tabs not spaces for distance
-        - use dashes for home menu
-        - make questions more accurate
     
     
  questions for prof:

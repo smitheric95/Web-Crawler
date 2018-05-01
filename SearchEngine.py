@@ -42,6 +42,12 @@ class SearchEngine(WebCrawler):
         pickle.dump(self.__dict__, f)
         f.close()
 
+    def validate_query(self, query):
+        for q in query.split(" "):
+            if self.word_is_valid(q) is not True:
+                return False
+        return True
+
     """
     clusters tf matrix into k pairs of leaders and followers
     populates self.clusters
@@ -125,7 +131,7 @@ class SearchEngine(WebCrawler):
                 if self.clusters is not None:
                     print("Index has already been built. \nYou'll need to restart the program to build a new one.")
 
-                else: # prompt user to import from file
+                else:  # prompt user to import from file
                     import_input = "-1"
                     while import_input != "y" and import_input != "n":
                         import_input = input("Would you like to import the index from disk? (y/n)").lower()
@@ -218,6 +224,11 @@ class SearchEngine(WebCrawler):
                     # prompt user to enter query
                     query_input = input("\nPlease enter a query:")
                     print("You entered: " + query_input)
+
+                    if self.validate_query(query_input):
+                        print("valid query")
+                    else:
+                        print('invalid')
             else:
                 break
 
