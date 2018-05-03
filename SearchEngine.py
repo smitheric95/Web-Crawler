@@ -20,6 +20,8 @@ class SearchEngine(WebCrawler):
         super().__init__(seed_url)
         self.thesaurus = None
         self.clusters = None  # {leader: [ (followerN, distanceN) ]}
+        self.N = None  # number of docs indexed
+        self.df = None  # doc frequency for each term
 
     def set_thesaurus(self, thesaurus):
         self.thesaurus = thesaurus
@@ -97,12 +99,31 @@ class SearchEngine(WebCrawler):
         # normalize list by dividing each element by the norm of list
         return [l/l_norm for l in input_list]
 
+    # modify parent method to keep track of number of docs and doc freq for each term
+    def build_frequency_matrix(self):
+        super().build_frequency_matrix()
+
+        self.N = len(self.frequency_matrix[0])
+        self.df = [sum(row) for row in self.frequency_matrix]
+
+    # returns tf-idf weight of a document or query (log tf times idf)
+    def tf_idf(self, doc):
+        w = []
+
+        for d in range(len(doc)):
+            if doc[d] > 0:
+                w.append((1 + math.log10(doc[d])) * math.log10(len(self.words) / self.df[d]))
+            else:
+                w.append(0)
+
+        return w
+
     # returns cos sim between query and document
     def cosine_similarity(self, query, doc):
         # normalize query and doc
-        query = self.normalize_list(query)
-        doc = self.normalize_list(doc)
-
+        # query = self.normalize_list(query)
+        # doc = self.normalize_list(doc)
+        return 0
 
     # compares a valid user query to each document and returns a list of results
     def process_query(self, query):

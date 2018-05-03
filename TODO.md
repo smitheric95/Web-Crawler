@@ -27,6 +27,7 @@
         - make it a function?
     - clean up output 
         - make consistent
+    - uncomment crawler main() code
     
     
  questions for prof:
