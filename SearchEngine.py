@@ -106,13 +106,13 @@ class SearchEngine(WebCrawler):
         self.N = len(self.frequency_matrix[0])
         self.df = [sum(row) for row in self.frequency_matrix]
 
-    # returns tf-idf weight of a document or query (log tf times idf)
+    # returns log weighted tf-idf weight of a document or query (log tf times idf)
     def tf_idf(self, doc):
         w = []
 
         for d in range(len(doc)):
             if doc[d] > 0:
-                w.append((1 + math.log10(doc[d])) * math.log10(len(self.words) / self.df[d]))
+                w.append((1 + math.log10(doc[d])) * math.log10(self.N / self.df[d]))
             else:
                 w.append(0)
 
@@ -120,10 +120,16 @@ class SearchEngine(WebCrawler):
 
     # returns cos sim between query and document
     def cosine_similarity(self, query, doc):
+        # compute tf-idf for query and doc
+        q_prime = self.tf_idf(query)
+        d_prime = self.tf_idf(doc)
+
         # normalize query and doc
-        # query = self.normalize_list(query)
-        # doc = self.normalize_list(doc)
-        return 0
+        q_prime = self.normalize_list(q_prime)
+        d_prime = self.normalize_list(d_prime)
+
+        # return dot product
+        return sum([q_prime[i] * d_prime[i] for i in range(len(q_prime))])
 
     # compares a valid user query to each document and returns a list of results
     def process_query(self, query):
