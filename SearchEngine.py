@@ -146,6 +146,18 @@ class SearchEngine(WebCrawler):
         # filter out terms that aren't in any of the documents
         query = [q for q in query if q in self.all_terms]
 
+        # convert query to list of term frequencies
+        query = [query.count(term) for term in self.all_terms]
+
+        # transpose tf matrix to get list of docs
+        docs = np.matrix([list(x) for x in zip(*self.frequency_matrix)])
+
+        # execute cosine similarity for each document
+        scores = [self.cosine_similarity(query, doc) for doc in docs]
+
+        # add .25 to the scores
+        
+
     def display_clusters(self):
         if self.clusters is not None:
             for leader, followers in self.clusters.items():

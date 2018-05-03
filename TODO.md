@@ -6,13 +6,14 @@
         - How did you determine the leader?
         - non-dict words: keep them (moore, etc) 
         - ignore stop words
+        - what doc/query weighting scheme?
+            - LTC.LTC
             
 - Querying:
     - see example queries in requirements
   
 - Cosine sim:
     - execute against query vs each document
-    - what doc/query weighting scheme?
     - if any query words in <title>, add +0.25 to score
     - display score, doc url and title in descending order for top K=6 results
         - explain why you think these are correct
