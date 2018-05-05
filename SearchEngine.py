@@ -133,6 +133,15 @@ class SearchEngine(WebCrawler):
 
     # compares a valid user query to each document and returns a list of results
     def process_query(self, query):
+        scores = []  # list of scores for each query vs docs
+
+        # set score equal to .25 if any of the query terms appear in the titles
+        for t in range(len(self.titles)):
+            if len(set(query.split()).intersection(list(self.titles.values())[t].lower().split())) > 0:
+                scores.append(0.25)
+            else:
+                scores.append(0)
+
         # split into list
         query = query.split(" ")
 
@@ -153,13 +162,9 @@ class SearchEngine(WebCrawler):
         docs = [list(x) for x in zip(*self.frequency_matrix)]
 
         # execute cosine similarity for each document
-        for doc in docs:
-            score = self.cosine_similarity(query, doc)
-            print(score)
-
-            # add .25 to the score if any of the query words appear in the title
-            print("hi")
-        
+        for d in range(len(docs)):
+            cur_score = self.cosine_similarity(query, docs[d])
+            print(cur_score)
 
     def display_clusters(self):
         if self.clusters is not None:

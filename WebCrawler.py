@@ -25,11 +25,13 @@ class WebCrawler:
         self.page_limit = None
         self.stop_words = []  # list of words to be ignored when processing documents
         self.url_frontier = []  # list of urls not yet visited
+        self.titles = {}
         self.visited_urls = {}  # URL : (Title, DocumentID) (hash of content of a visited URL)
-        self.duplicate_urls = {}    # DocumentID : [URLs that produce that ID]
+        self.duplicate_urls = {}  # DocumentID : [URLs that produce that ID]
         self.outgoing_urls = []
         self.broken_urls = []
         self.graphic_urls = []
+        self.titles = {}  # DocumentID : title (note: only titles of docs with stored words)
         self.words = {}  # DocumentID : [words]
         self.all_terms = []  # set of all stemmed terms in all documents
         self.frequency_matrix = []  # Term doc frequency matrix (row=term, col=doc)
@@ -190,6 +192,9 @@ class WebCrawler:
                         # keep track of only those words that are valid and not in the stop word collection
                         self.words[current_doc_id] = [w for w in content_words
                                                       if w not in self.stop_words and self.word_is_valid(w)]
+
+                        # store the title
+                        self.titles[current_doc_id] = current_title
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
