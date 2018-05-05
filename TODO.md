@@ -29,6 +29,9 @@
     - clean up output 
         - make consistent
     - uncomment crawler main() code
+    - adding line 161 on webcrawler made the program slow?
+    - "building term freq matrix..." lags
+    
     
     
  questions for prof:

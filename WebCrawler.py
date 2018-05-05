@@ -157,8 +157,8 @@ class WebCrawler:
 
                 # basic HTTP error e.g. 404, 501, etc
                 except urllib.error.HTTPError as e:
-                    if current_page not in self.broken_urls:
-                        self.broken_urls.append(current_page)
+                    if current_page not in self.broken_urls and current_page is not None:
+                            self.broken_urls.append(current_page)
                 else:
                     current_content = str(handle.read())
 
@@ -197,12 +197,12 @@ class WebCrawler:
                             current_url = link.get('href')
 
                             # expand the url to include the domain
-                            if pwd not in current_url:
+                            if current_url is not None and pwd not in current_url:
                                 # only works if the resulting link is valid
                                 current_url = urllib.parse.urljoin(pwd, current_url)
 
                             # the link should be visited
-                            if self.url_is_valid(current_url):
+                            if current_url is not None and self.url_is_valid(current_url):
 
                                 # the link is within scope and hasn't been added to the queue
                                 if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
@@ -215,7 +215,7 @@ class WebCrawler:
                                     self.outgoing_urls.append(current_url)
 
                             # the link is broken
-                            elif current_url not in self.broken_urls:
+                            elif current_url not in self.broken_urls and current_url is not None:
                                 self.broken_urls.append(current_url)
 
                     # file is a graphic, mark it as such

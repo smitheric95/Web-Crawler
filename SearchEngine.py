@@ -153,9 +153,12 @@ class SearchEngine(WebCrawler):
         docs = np.matrix([list(x) for x in zip(*self.frequency_matrix)])
 
         # execute cosine similarity for each document
-        scores = [self.cosine_similarity(query, doc) for doc in docs]
+        for doc in docs:
+            score = self.cosine_similarity(query, doc)
+            print(score)
 
-        # add .25 to the scores
+            # add .25 to the score if any of the query words appear in the title
+
         
 
     def display_clusters(self):
