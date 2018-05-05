@@ -150,7 +150,7 @@ class SearchEngine(WebCrawler):
         query = [query.count(term) for term in self.all_terms]
 
         # transpose tf matrix to get list of docs
-        docs = np.matrix([list(x) for x in zip(*self.frequency_matrix)])
+        docs = [list(x) for x in zip(*self.frequency_matrix)]
 
         # execute cosine similarity for each document
         for doc in docs:
@@ -158,7 +158,7 @@ class SearchEngine(WebCrawler):
             print(score)
 
             # add .25 to the score if any of the query words appear in the title
-
+            print("hi")
         
 
     def display_clusters(self):

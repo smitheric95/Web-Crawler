@@ -31,7 +31,8 @@
     - uncomment crawler main() code
     - adding line 161 on webcrawler made the program slow?
     - "building term freq matrix..." lags
-    
+    - add cache thing to gitignore
+    - try entering query w space
     
     
  questions for prof:
