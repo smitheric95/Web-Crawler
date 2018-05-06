@@ -169,7 +169,14 @@ class SearchEngine(WebCrawler):
         for i, (doc_id, score) in enumerate(scores.items()):
             scores[doc_id] += self.cosine_similarity(query, docs[i])
 
-        return scores
+        # sort by scores in descending order
+        sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
+
+        # populate 2D list of sorted results: [[score, title, URL]]
+        results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id]] for doc_id, score in sorted_scores]
+
+        # return the first k results
+        return results
 
     def display_clusters(self):
         if self.clusters is not None:
