@@ -8,6 +8,8 @@
         - ignore stop words
         - what doc/query weighting scheme?
             - LTC.LTC
+        - filters out terms that aren't in any of the documents
+        - only documents whose score is > 0 are returned
             
 - Querying:
     - see example queries in requirements

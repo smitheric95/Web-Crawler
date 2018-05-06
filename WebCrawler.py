@@ -84,11 +84,18 @@ class WebCrawler:
 
     # sets the stop words list given a file with stop words separated by line
     def set_stop_words(self, filepath):
-        self.stop_words_file = filepath
-        with open(filepath, "r") as stop_words_file:
-            stop_words = stop_words_file.readlines()
+        try:
+            with open(filepath, "r") as stop_words_file:
+                stop_words = stop_words_file.readlines()
 
-        self.stop_words = [x.strip() for x in stop_words]
+            self.stop_words = [x.strip() for x in stop_words]
+        except IOError as e:
+            print("Error opening" + filepath + " error({0}): {1}".format(e.errno, e.strerror))
+        except ValueError:
+            print("Error opening" + filepath + ": Data is not correctly formatted. See README.")
+        except:
+            print("Error opening" + filepath + "Unexpected error:", sys.exc_info()[0])
+            raise
 
     '''
     returns whether or not a url is valid

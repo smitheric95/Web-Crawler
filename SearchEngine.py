@@ -13,18 +13,35 @@ import random
 from sklearn.metrics.pairwise import euclidean_distances
 from nltk.stem import PorterStemmer
 import math
-
+import csv
 
 class SearchEngine(WebCrawler):
     def __init__(self, seed_url):
         super().__init__(seed_url)
-        self.thesaurus = None
+        self.thesaurus = None  # {word: alternative}
         self.clusters = None  # {leader: [ (followerN, distanceN) ]}
         self.N = None  # number of docs indexed
         self.df = None  # doc frequency for each term
 
-    def set_thesaurus(self, thesaurus):
-        self.thesaurus = thesaurus
+    def set_thesaurus(self, thesaurus_file):
+        thesaurus = {}
+
+        try:
+            with open(thesaurus_file) as csvfile:
+                reader = csv.reader(csvfile, delimiter=',')
+                for row in reader:
+                    word = row[0]
+                    alternatives = row[1:]
+                    thesaurus[word] = alternatives
+
+            self.thesaurus = thesaurus
+        except IOError as e:
+            print("Error opening" + thesaurus_file + " error({0}): {1}".format(e.errno, e.strerror))
+        except ValueError:
+            print("Error opening" + thesaurus_file + ": Data is not correctly formatted. See README.")
+        except:
+            print("Error opening" + thesaurus_file + "Unexpected error:", sys.exc_info()[0])
+            raise
 
     # loads index from disk
     def load_index(self, filename="exported_index.obj"):
@@ -172,14 +189,19 @@ class SearchEngine(WebCrawler):
         # sort by scores in descending order
         sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
-        # populate 2D list of sorted results: [[score, title, URL, first 20 words]]
-        results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id],
-                    [self.doc_words[doc_id][:20]]] for doc_id, score in sorted_scores]
+        # populate 2D list sorted results: [[score, title, URL, first 20 words]]
+        results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id],  # only keep results if score > 0
+                    [self.doc_words[doc_id][:20]]] for doc_id, score in sorted_scores if score > 0]
 
-        # TODO: Handle K, < K, and `K/2 results
+        # TODO: Handle K, < K, and K/2 results
+        # if less results than threshold, do thesaurus expansion
+        if len(results) < k/2:
+            print("Less than K/2 results. Performing thesaurus expansion...")
+
+
 
         # return the first k results
-        return results
+        return results[:k]
 
     def display_clusters(self):
         if self.clusters is not None:
