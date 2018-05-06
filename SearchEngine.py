@@ -172,8 +172,11 @@ class SearchEngine(WebCrawler):
         # sort by scores in descending order
         sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
-        # populate 2D list of sorted results: [[score, title, URL]]
-        results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id]] for doc_id, score in sorted_scores]
+        # populate 2D list of sorted results: [[score, title, URL, first 20 words]]
+        results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id],
+                    [self.doc_words[doc_id][:20]]] for doc_id, score in sorted_scores]
+
+        # TODO: Handle K, < K, and `K/2 results
 
         # return the first k results
         return results
