@@ -13,8 +13,6 @@
     - see example queries in requirements
   
 - Cosine sim:
-    - execute against query vs each document
-    - if any query words in <title>, add +0.25 to score
     - display score, doc url and title in descending order for top K=6 results
         - explain why you think these are correct
         - also display first 20 words in doc (can be stemmed)
@@ -33,6 +31,8 @@
     - "building term freq matrix..." lags
     - add cache thing to gitignore
     - try entering query w space
+    - "enter a query (stop to stop)"
+    - shouldn't self.titles have duplicate urls?
     
     
  questions for prof:

@@ -25,16 +25,21 @@ class WebCrawler:
         self.page_limit = None
         self.stop_words = []  # list of words to be ignored when processing documents
         self.url_frontier = []  # list of urls not yet visited
-        self.titles = {}
         self.visited_urls = {}  # URL : (Title, DocumentID) (hash of content of a visited URL)
-        self.duplicate_urls = {}  # DocumentID : [URLs that produce that ID]
         self.outgoing_urls = []
         self.broken_urls = []
         self.graphic_urls = []
-        self.titles = {}  # DocumentID : title (note: only titles of docs with stored words)
-        self.words = {}  # DocumentID : [words]
         self.all_terms = []  # set of all stemmed terms in all documents
         self.frequency_matrix = []  # Term doc frequency matrix (row=term, col=doc)
+
+        """
+        note: the attributes below only contain information from those documents whose 
+              words were saved (.txt, .htm, .html, .php)
+        """
+        self.duplicate_urls = {}  # DocumentID : [URLs that produce that ID]
+        self.doc_urls = {}
+        self.doc_titles = {}  # DocumentID : title
+        self.doc_words = {}  # DocumentID : [words]
 
     # print the report produced from crawling a site
     def __str__(self):
@@ -190,11 +195,11 @@ class WebCrawler:
                         content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
 
                         # keep track of only those words that are valid and not in the stop word collection
-                        self.words[current_doc_id] = [w for w in content_words
+                        self.doc_words[current_doc_id] = [w for w in content_words
                                                       if w not in self.stop_words and self.word_is_valid(w)]
 
                         # store the title
-                        self.titles[current_doc_id] = current_title
+                        self.doc_titles[current_doc_id] = current_title
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
@@ -235,12 +240,12 @@ class WebCrawler:
     populates frequency_matrix and all_terms
     '''
     def build_frequency_matrix(self):
-        if self.words is not None:
+        if self.doc_words is not None:
             # use porter stemmer for comparing words
             stemmer = PorterStemmer()
 
             # grab the unique, stemmed terms from all the documents
-            self.all_terms = list(set([stemmer.stem(word) for word_list in self.words.values() for word in word_list]))
+            self.all_terms = list(set([stemmer.stem(word) for word_list in self.doc_words.values() for word in word_list]))
             self.all_terms.sort()
 
             # initialize frequency matrix for one row per term
@@ -251,7 +256,7 @@ class WebCrawler:
                 # append the number of times the stemmed words match
                 frequency_count = []
 
-                for word_list in self.words.values():
+                for word_list in self.doc_words.values():
                     stemmed_word_list = [stemmer.stem(word) for word in word_list]
                     frequency_count.append(stemmed_word_list.count(self.all_terms[term]))
 
@@ -261,9 +266,9 @@ class WebCrawler:
     def print_frequency_matrix(self):
         output_string = ","
 
-        if self.words is not None:
+        if self.doc_words is not None:
             # create file heading
-            for i in range(len(self.words.keys())):
+            for i in range(len(self.doc_words.keys())):
                 output_string += "Doc" + str(i) + ","
             output_string += "\n"
 
