@@ -37,7 +37,7 @@ class WebCrawler:
               words were saved (.txt, .htm, .html, .php)
         """
         self.duplicate_urls = {}  # DocumentID : [URLs that produce that ID]
-        self.doc_urls = {}
+        self.doc_urls = {}  # DocumentID: first URL that produces that ID
         self.doc_titles = {}  # DocumentID : title
         self.doc_words = {}  # DocumentID : [words]
 
@@ -198,8 +198,9 @@ class WebCrawler:
                         self.doc_words[current_doc_id] = [w for w in content_words
                                                       if w not in self.stop_words and self.word_is_valid(w)]
 
-                        # store the title
+                        # store the title and url
                         self.doc_titles[current_doc_id] = current_title
+                        self.doc_urls[current_doc_id] = current_page
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
