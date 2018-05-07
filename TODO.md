@@ -11,6 +11,7 @@
         - filters out terms that aren't in any of the documents
         - only documents whose score is > 0 are returned
         - score is zero if term doesn't appear in any documents
+        - words in the title aren't part of the cosine similarity, only .25 is added
             
 - Querying:
     - see example queries in requirements
@@ -22,6 +23,8 @@
         - If less than K/2 documents are returned for a query, rerun the query using thesaurus expansion.    
     
  - etc:
+ *  - does 60 apply to pages crawled or documents collected??
+  
     - should I stem words in the docs?
     - add user agent
     - replace all input instances with just one variable

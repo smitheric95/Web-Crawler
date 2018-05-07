@@ -199,7 +199,7 @@ class WebCrawler:
                     if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php", ".txt"])):
 
                         # format the content of the page
-                        formatted_content = codecs.escape_decode(bytes(soup.get_text().lower(), "utf-8"))[0].decode("utf-8", errors='replace')
+                        formatted_content = codecs.escape_decode(bytes(soup.body.get_text().lower(), "utf-8"))[0].decode("utf-8", errors='replace')
 
                         # store only the words of the file
                         content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
