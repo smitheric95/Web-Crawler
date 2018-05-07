@@ -205,10 +205,6 @@ class SearchEngine(WebCrawler):
         results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id].replace(self.domain_url, ''),
                     " ".join(self.doc_words[doc_id][:20])] for doc_id, score in sorted_scores if score > 0]
 
-        for doc_id, score in sorted_scores:
-            if self.doc_titles[doc_id] == 'SMU CSE 5/7337 Spring 2018 Textfiles':
-                print(doc_id)
-
         # Handle K, < K, and K/2 results
         # if less results than threshold, do thesaurus expansion
         if len(results) < k/2 and query_expanded is False:
