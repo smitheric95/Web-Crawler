@@ -19,10 +19,12 @@ class SearchEngine(WebCrawler):
     def __init__(self, seed_url):
         super().__init__(seed_url)
         self.thesaurus = None  # {word: alternative}
+        self.thesaurus_file = None
         self.clusters = None  # {leader: [ (followerN, distanceN) ]}
         self.N = None  # number of docs indexed
         self.df = None  # doc frequency for each term
 
+    # parses a thesaurus file and sets attribute
     def set_thesaurus(self, thesaurus_file):
         thesaurus = {}
 
@@ -35,6 +37,8 @@ class SearchEngine(WebCrawler):
                     thesaurus[word] = alternatives
 
             self.thesaurus = thesaurus
+            self.thesaurus_file = thesaurus_file
+
         except IOError as e:
             print("Error opening" + thesaurus_file + " error({0}): {1}".format(e.errno, e.strerror))
         except ValueError:
@@ -64,7 +68,7 @@ class SearchEngine(WebCrawler):
         f.close()
 
     def validate_query(self, query):
-        for q in query.split(" "):
+        for q in query.split():
             if self.word_is_valid(q) is not True:
                 return False
         return True
@@ -153,18 +157,19 @@ class SearchEngine(WebCrawler):
     return type is a dictionary: {DocID : score}
     Argument k is the number of results to return
     """
-    def process_query(self, query, k=6):
+    def process_query(self, user_query, k=6):
         # list of scores for each query vs docs
         scores = {doc_id: 0 for doc_id in self.doc_titles.keys()}  # DocID : score
 
         # set score equal to .25 if any of the query terms appear in the titles
         for t in self.doc_titles.keys():
             cur_title = self.doc_titles[t].lower()
-            if len(set(query.split()).intersection(cur_title.split())) > 0:
+            if len(set(user_query.split()).intersection(cur_title.split())) > 0:
                 scores[t] = 0.25
 
-        # split into list
-        query = query.split(" ")
+        # split query into list
+        query = user_query
+        query = query.split()
 
         # remove stop words
         query = [q for q in query if q not in self.stop_words]
@@ -198,7 +203,12 @@ class SearchEngine(WebCrawler):
         if len(results) < k/2:
             print("Less than K/2 results. Performing thesaurus expansion...")
 
+            # split original query into list
+            query = user_query.split()
 
+            # expand query using the thesaurus
+            for term in query:
+                query.append(self.thesaurus[query])
 
         # return the first k results
         return results[:k]
@@ -264,6 +274,7 @@ class SearchEngine(WebCrawler):
                         print("\nSeed URL: " + self.seed_url)
                         print("Page limit: " + str(self.page_limit))
                         print("Stop words: " + str(self.stop_words_file))
+                        print("Thesaurus: " + str(self.thesaurus_file))
 
                         # build index
                         print("\nBeginning crawling...\n")

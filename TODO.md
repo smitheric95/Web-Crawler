@@ -21,7 +21,6 @@
         - If less than K/2 documents are returned for a query, rerun the query using thesaurus expansion.    
     
  - etc:
-    - add exceptions to parsing stopwords.txt and thesaurus.csv
     - should I stem words in the docs?
     - add user agent
     - replace all input instances with just one variable
@@ -35,9 +34,16 @@
     - try entering query w space
     - "enter a query (stop to stop)"
     - shouldn't self.titles have duplicate urls?
+    - test file i/o errors
+    - run crawler w 60 docs
+    - test validate query (changed split)
+    - email prof query question
     
     
  questions for prof:
+ 
+ - if a user enters "nice" should it be expanded to "nice beautiful fancy"?
+ 
  yes  - if you add .25, does that go over 1.0?
  x   - format of thesaurus as a CSV passed by optional command line argument?
  x   - do we need to keep things like showing the term frequency matrix? 

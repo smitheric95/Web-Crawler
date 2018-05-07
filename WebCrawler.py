@@ -22,6 +22,7 @@ class WebCrawler:
         self.seed_url = seed_url
         self.domain_url = "/".join(self.seed_url.split("/")[:3])
         self.robots_txt = None
+        self.stop_words_file = None
         self.page_limit = None
         self.stop_words = []  # list of words to be ignored when processing documents
         self.url_frontier = []  # list of urls not yet visited
@@ -89,6 +90,8 @@ class WebCrawler:
                 stop_words = stop_words_file.readlines()
 
             self.stop_words = [x.strip() for x in stop_words]
+            self.stop_words_file = filepath
+
         except IOError as e:
             print("Error opening" + filepath + " error({0}): {1}".format(e.errno, e.strerror))
         except ValueError:
