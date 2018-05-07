@@ -208,7 +208,9 @@ class SearchEngine(WebCrawler):
 
             # expand query using the thesaurus
             for term in query:
-                query.append(self.thesaurus[query])
+                # add synonyms to the end of the query
+                if term in self.thesaurus:
+                    query += [syn for syn in self.thesaurus[term] if syn not in query]
 
         # return the first k results
         return results[:k]
