@@ -157,7 +157,7 @@ class SearchEngine(WebCrawler):
     """
     compares a valid user query to each document and returns a list of results
     
-    return type is a dictionary: {DocID : score}
+    return type is a 2D list: [[DocId, title, first 20 words]]
     
     Arguments: k is the number of results to return
                query_expanded is a boolean used to stop the recursive call for query expansion 
@@ -201,9 +201,9 @@ class SearchEngine(WebCrawler):
 
         # populate 2D list sorted results: [[score, title, URL, first 20 words]]
         results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id],  # only keep results if score > 0
-                    [self.doc_words[doc_id][:20]]] for doc_id, score in sorted_scores if score > 0]
+                    " ".join(self.doc_words[doc_id][:20])] for doc_id, score in sorted_scores if score > 0]
 
-        # TODO: Handle K, < K, and K/2 results
+        # Handle K, < K, and K/2 results
         # if less results than threshold, do thesaurus expansion
         if len(results) < k/2 and query_expanded is False:
             print("Less than K/2 results. Performing thesaurus expansion...")
@@ -375,6 +375,11 @@ class SearchEngine(WebCrawler):
                             # process the query for searching
                             else:
                                 results = self.process_query(query_input)
+                                self.print_divider()
+
+                                # display results
+
+
                                 print("showed scores")
 
                         else:
