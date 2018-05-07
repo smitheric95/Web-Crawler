@@ -118,7 +118,9 @@ class SearchEngine(WebCrawler):
         l_norm = math.sqrt(sum([l**2 for l in input_list]))
 
         # normalize list by dividing each element by the norm of list
-        return [l/l_norm for l in input_list]
+        if l_norm > 0:
+            input_list = [l/l_norm for l in input_list]
+        return input_list
 
     # modify parent method to keep track of number of docs and doc freq for each term
     def build_frequency_matrix(self):

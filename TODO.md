@@ -10,6 +10,7 @@
             - LTC.LTC
         - filters out terms that aren't in any of the documents
         - only documents whose score is > 0 are returned
+        - score is zero if term doesn't appear in any documents
             
 - Querying:
     - see example queries in requirements
