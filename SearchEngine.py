@@ -154,10 +154,13 @@ class SearchEngine(WebCrawler):
 
     """
     compares a valid user query to each document and returns a list of results
+    
     return type is a dictionary: {DocID : score}
-    Argument k is the number of results to return
+    
+    Arguments: k is the number of results to return
+               query_expanded is a boolean used to stop the recursive call for query expansion 
     """
-    def process_query(self, user_query, k=6):
+    def process_query(self, user_query, k=6, query_expanded=False):
         # list of scores for each query vs docs
         scores = {doc_id: 0 for doc_id in self.doc_titles.keys()}  # DocID : score
 
@@ -200,7 +203,7 @@ class SearchEngine(WebCrawler):
 
         # TODO: Handle K, < K, and K/2 results
         # if less results than threshold, do thesaurus expansion
-        if len(results) < k/2:
+        if len(results) < k/2 and query_expanded is False:
             print("Less than K/2 results. Performing thesaurus expansion...")
 
             # split original query into list
@@ -211,6 +214,9 @@ class SearchEngine(WebCrawler):
                 # add synonyms to the end of the query
                 if term in self.thesaurus:
                     query += [syn for syn in self.thesaurus[term] if syn not in query]
+
+            # recursively call process_query with the new query
+            return self.process_query(" ".join(query), k, True)
 
         # return the first k results
         return results[:k]
@@ -366,7 +372,7 @@ class SearchEngine(WebCrawler):
 
                             # process the query for searching
                             else:
-                                self.process_query(query_input)
+                                results = self.process_query(query_input)
                                 print("showed scores")
 
                         else:
