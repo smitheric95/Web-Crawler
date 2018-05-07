@@ -199,8 +199,8 @@ class SearchEngine(WebCrawler):
         # sort by scores in descending order
         sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
-        # populate 2D list sorted results: [[score, title, URL, first 20 words]]
-        results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id],  # only keep results if score > 0
+        # populate 2D list sorted results: [[score, title, URL, first 20 words]], but only keep results if score > 0
+        results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id].replace(self.domain_url, ''),
                     " ".join(self.doc_words[doc_id][:20])] for doc_id, score in sorted_scores if score > 0]
 
         # Handle K, < K, and K/2 results
@@ -378,7 +378,8 @@ class SearchEngine(WebCrawler):
                                 self.print_divider()
 
                                 # display results
-
+                                for i in range(len(results)):
+                                    print(i+1 + " .\t")
 
                                 print("showed scores")
 
