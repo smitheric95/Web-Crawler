@@ -14,6 +14,8 @@ from sklearn.metrics.pairwise import euclidean_distances
 from nltk.stem import PorterStemmer
 import math
 import csv
+from textwrap import wrap
+
 
 class SearchEngine(WebCrawler):
     def __init__(self, seed_url):
@@ -378,10 +380,15 @@ class SearchEngine(WebCrawler):
                                 self.print_divider()
 
                                 # display results
-                                for i in range(len(results)):
-                                    print(i+1 + " .\t")
-
-                                print("showed scores")
+                                if len(results) > 0:
+                                    for i in range(len(results)):
+                                        print(str(i+1) + ".\t" + str(results[i][0]))
+                                        print("\t" + results[i][1] + " (" + results[i][2] + ")")
+                                        print("\t" + "\n\t".join(wrap(results[i][3], 40)))
+                                        print()
+                                else:
+                                    print("No results found.")
+                                self.print_divider()
 
                         else:
                             print("Invalid query.")
