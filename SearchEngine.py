@@ -383,7 +383,7 @@ class SearchEngine(WebCrawler):
                                     for i in range(len(results)):
                                         print(str(i+1) + ".\t" + str(results[i][0]))
                                         print("\t" + results[i][1] + " (" + results[i][2] + ")")
-                                        print("\t" + "\n\t".join(wrap(results[i][3], 40)))
+                                        print("\t\"" + "\n\t ".join(wrap(results[i][3], 40)) + "\"")
                                         print()
                                 else:
                                     print("No results found.")
