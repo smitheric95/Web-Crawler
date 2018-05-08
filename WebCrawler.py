@@ -198,6 +198,9 @@ class WebCrawler:
 
                     # if the page is an html document, we need to parse it for links
                     if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php", ".txt"])):
+                        if current_title == "building1.txt":
+                            print("error page")
+
                         # remove contents of title tag
                         [s.extract() for s in soup('title')]
 
@@ -205,7 +208,10 @@ class WebCrawler:
                         formatted_content = codecs.escape_decode(bytes(soup.get_text().lower(), "utf-8"))[0].decode("utf-8", errors='replace')
 
                         # store only the words of the file
-                        content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
+                        content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split())
+
+                        # remove the 'b' character that's prepended when converting
+                        content_words[0] = content_words[0][1:]
 
                         # keep track of only those words that are valid and not in the stop word collection
                         self.doc_words[current_doc_id] = [w for w in content_words
