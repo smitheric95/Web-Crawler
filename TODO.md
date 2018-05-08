@@ -14,8 +14,10 @@
         - score is zero if term doesn't appear in any documents
         - words in the title aren't part of the cosine similarity, only .25 is added
         - if a user enters "nice" should it is expanded to "nice beautiful fancy"
-            
+ 
+     
  - etc:
+    - finish readme
     - clean up output 
         - make consistent
     - uncomment crawler main() code

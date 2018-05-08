@@ -31,15 +31,27 @@ On Linux:
 cd Web-Crawler/
 sudo python3 setup.py install
 ```
-This will install all necessary dependencies to your local version of Python3. Alternatively, you can install the dependencies yourself using pip.
+This will install all necessary dependencies to your local version of Python3. 
+If you still have problems after running the setup file, you can install the dependencies yourself using [pip](https://pypi.org/project/pip/).
 
 #### Step 4 
 Now you can run the project:
 
 ```commandline
-python3 WebCrawler.py <page limit> <stop words file>
+usage: SearchEngine.py [-h] [-p PAGELIMIT] [-s STOPWORDS] [-t THESAURUS]
 
-python3 WebCrawler.py 20 stopwords.txt
+Search Engine by Eric Smith - CSE 7337 Spring 2018
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -p PAGELIMIT, --pagelimit PAGELIMIT
+                        Maximum number of pages to crawl. (Required)
+  -s STOPWORDS, --stopwords STOPWORDS
+                        Stop words file: a newline separated list of stop
+                        words. (Default is stopwords.txt)
+  -t THESAURUS, --thesaurus THESAURUS
+                        Thesaurus file: a comma separated list of words and
+                        their synonyms. (Default is thesaurus.csv)
 ```
 
 Note: If you're using a Mac and you encounter an SSL Certificate warning, you may need to run the command listed in [this StackOverflow answer](https://stackoverflow.com/a/42098127/8853372).
