@@ -123,7 +123,30 @@ Users are given the option to export the index created to [Output/exported_index
 ### Running the Search Engine
 
 ```
+----------------------------------------------------------------------
+|    Eric's Search Engine                                            |
+|                                                                    |
+|    [0] Exit                                                        |
+|    [1] Build Index                                                 |
+|    [2] Search Documents                                            |
+----------------------------------------------------------------------
+Please select an option: 2
+----------------------------------------------------------------------
 
+Please enter a query or "stop": smu schedule
+----------------------------------------------------------------------
+1.	[0.3996]  SMU CSE 5337/7337 Spring 2018 Schedule (/~fmoore/schedule.htm)
+
+	"smu cse preliminary schedule page maintained
+	 latest schedule content and activities date topics
+	 activity jan course overview introduction ir chpt"
+	 
+
+2.	[0.2500]  Freeman Moore - SMU Spring 2018 (/~fmoore/index_duplicate.htm)
+
+	"spring freeman moore phd email fmooresmuedu spring
+	 cse fall cse keep looking course calendar latest
+	 information spring tth caruth syllabus"
 ...
 ```
 
