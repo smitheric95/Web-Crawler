@@ -122,30 +122,20 @@ Users are given the option to export the index created to [Output/exported_index
 
 ### Running the Search Engine
 
-```commandline
-----------------------------------------------------------------------
-|    Eric's Search Engine                                            |
-|                                                                    |
-|    [0] Exit                                                        |
-|    [1] Build Index                                                 |
-|    [2] Search Documents                                            |
-----------------------------------------------------------------------
-Please select an option: 2
-----------------------------------------------------------------------
-
-Please enter a query or "stop": smu schedule
-----------------------------------------------------------------------
-1.	[0.3996]  SMU CSE 5337/7337 Spring 2018 Schedule (/~fmoore/schedule.htm)
-
-	"smu cse preliminary schedule page maintained
-	 latest schedule content and activities date topics
-	 activity jan course overview introduction ir chpt"
 ```
 
+...
+```
+
+The search engine displays the top 6 results from the documents indexed. <br> Each result contains:
+* The document title and URL
+* The cosine similarity score of the result
+* The first 20 words of the document
+
+<b>For an example of a complete output from the search engine, see [Output/Example Output.txt](./Output/Example%20Output.txt).</b>
 
 ## Crawler Implementation
 
-#### Crawler Class
 A WebCrawler object holds onto various forms of information about the pages it crawls.<br>
 This information includes but is not limited to:
 * <b>seed_url</b>: The starting URL used to initialize the crawler 
@@ -158,7 +148,6 @@ This information includes but is not limited to:
 * <b>words</b>: A dictionary containing DocumentIDs and the valid words found in a page
 * <b>frequency_matrix</b>: A 2D array of terms and their frequencies
 
-#### Crawler Algorithm
 In order to perform the basic operations of a crawler, I implemented a custom crawling method.
 
 The crawl() method can be summarized as follows:
@@ -175,7 +164,30 @@ The crawl() method can be summarized as follows:
 This crawler is <i>polite</i> in the sense that it checks the robots.txt file before visiting a page.<br>
 It is also relatively <i>robust</i> as it is immune to duplicate and broken pages - both of which are reported when the crawler is finished.
 
-The crawler also computes a term frequency matrix. Each unique word is stemmed with the NLTK Porter stemmer and its term and document frequencies are outputted.
-Document clusterings are determined by picking 5 random leaders and assigning followers to the leaders of shortest Euclidean distance. 
+The crawler also computes a term frequency matrix. Each unique word is stemmed with the NLTK Porter stemmer and its term and document frequencies are outputted. 
 
-## Search Engine Implementation 
+## Search Engine Implementation (Added in Part 2)
+
+The SearchEngine class inherits from the original WebCrawler class and has the additional functionality:
+* Import/export and index from disk
+* Contains document clusters
+* Computes the LTC.LTC cosine similarity between documents
+* Processes user queries
+* Returns results of user queries
+* Thesaurus expansion of user queries
+
+Document clusterings are determined by picking 5 random leaders and assigning followers to the leaders of shortest Euclidean distance. This clustering method work OK, but it tends to heavily cluster documents around a few leaders. This leads me to believe that documents in the corpus are very similar.<br> 
+
+User queries are also handled by the SearchEngine class. Stopwords (given as an input to the program) are thrown out of the query. Terms that do not appear in any of the documents are also thrown out. Query terms are stemmed before they are compared to documents. 
+If the user enters a non-word, the query processor will give an error message. A word is a string of non-space characters, beginning with an alphabetic character. It may contain special characters, but the last character of a word is either alphabetic or numeric.
+
+User queries are converted to term frequency vectors and compared to each document. The [LTC.LTC](https://nlp.stanford.edu/IR-book/html/htmledition/document-and-query-weighting-schemes-1.html) weighted cosine similarity function is used to compare the query and documents. 
+This weighting scheme does a good job of balancing the frequencies of terms within and among documents - making sure not to assign too high of a priority to terms that appear frequently and assigning a higher importance to rarer terms.
+
+Only documents that receive a cosine similarity score greater than zero are returned to the user. 
+If the search engine finds less than three relevant documents, it repeats its search after performing thesaurus expansion. 
+(The thesaurus is also given as input to the program.)
+
+Finally, those documents that have query terms in their titles have .25 added to their score. (Titles are not used to compute the original score.)
+
+Overall, I think the search engine does a good job of returning relevant results to the user. 

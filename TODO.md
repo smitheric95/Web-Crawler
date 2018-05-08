@@ -1,35 +1,48 @@
 ##TODO
 
 - Report: 
-    - Describe in detail what has changed
-    - Describe decisions on how to handle questions in requirements
-        - How did you determine the leader?
-            - Do you agree with the clustering? (kinda)
-        - non-dict words: keep them (moore, etc) 
-        - ignore stop words
-        - what doc/query weighting scheme?
-            - LTC.LTC
-            - this does a reasonable job of returning docs, maybe not in perfect order
-                - eg "smu schedule"
-        - filters out terms that aren't in any of the documents
-        - if the user enters a word not in the dictionary:
-            - users must enter valid "words" (define words)
-        - if a user enters a word not in any of the docs, it is thrown out
-        - stop words are also thrown out, as they are not indexed
-        - only documents whose score is > 0 are returned
-        - score is zero if term doesn't appear in any documents
-        - words in the title aren't part of the cosine similarity, only .25 is added
-        - if a user enters "nice" it is expanded to "nice beautiful fancy"
-        
+    
+
+
+    - consistent spacing after ## titles    
      
  - etc:
     - remove name from output file
     - test example output link
+    - don't change url if something is a duplicate
     - finish readme
     - clean up output 
         - make consistent
+    - index duplicate is being stored for that doc
     - uncomment crawler main() code
     - add cache thing to gitignore
     - test file i/o errors
     - delete todo
     - but in bold answers to questions?
+    - if you have a hard time reading README, see github
+
+
+----------------------------------------------------------------------
+|    Eric's Search Engine                                            |
+|                                                                    |
+|    [0] Exit                                                        |
+|    [1] Build Index                                                 |
+|    [2] Search Documents                                            |
+----------------------------------------------------------------------
+Please select an option: 2
+----------------------------------------------------------------------
+
+Please enter a query or "stop": smu schedule
+----------------------------------------------------------------------
+1.	[0.3996]  SMU CSE 5337/7337 Spring 2018 Schedule (/~fmoore/schedule.htm)
+
+	"smu cse preliminary schedule page maintained
+	 latest schedule content and activities date topics
+	 activity jan course overview introduction ir chpt"
+	 
+
+2.	[0.2500]  Freeman Moore - SMU Spring 2018 (/~fmoore/index_duplicate.htm)
+
+	"spring freeman moore phd email fmooresmuedu spring
+	 cse fall cse keep looking course calendar latest
+	 information spring tth caruth syllabus"
