@@ -23,3 +23,4 @@
     - uncomment crawler main() code
     - add cache thing to gitignore
     - test file i/o errors
+    - delete todo
