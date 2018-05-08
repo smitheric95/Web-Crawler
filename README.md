@@ -8,7 +8,12 @@ https://github.com/smitheric95/Web-Crawler<br>
 This project is a custom web crawler and search engine written in [Python 3](https://www.python.org/downloads/release/python-364/). 
 It was meant for browsing content on the [course website](https://lyle.smu.edu/~fmoore/) for my 7337 Info Retrieval and Web Search class.
 
-Main external libraries: 
+### Web Crawler
+
+### Search Engine
+
+### Main external libraries:
+* [SciKit-Learn](http://scikit-learn.org/stable/) for Euclidean distance calculation.
 * [BeautifulSoup 4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) for HTML parsing.
 * [NLTK Porter Stemmer](http://www.nltk.org/api/nltk.stem.html) for stemming.
 <br>
