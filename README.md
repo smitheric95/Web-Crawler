@@ -69,7 +69,7 @@ optional arguments:
 
 Note: If you're using a Mac and you encounter an SSL Certificate warning, you may need to run the command listed in [this StackOverflow answer](https://stackoverflow.com/a/42098127/8853372).
 <br>
-
+<br>
 ## Running the Program
 The program gives user a simple, command line interface to use. 
 
@@ -156,6 +156,7 @@ The search engine displays the top 6 results from the documents indexed. <br> Ea
 * The first 20 words of the document
 
 <b>For an example of a complete output from the search engine, see [Output/Example Output.txt](./Output/Example%20Output.txt).</b>
+<br>
 
 ## Crawler Implementation
 
