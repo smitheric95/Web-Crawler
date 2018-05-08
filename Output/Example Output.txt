@@ -1,4 +1,4 @@
-Erics-MacBook-Pro:Web-Crawler ericsmith$ python SearchEngine.py -p 60
+$ python SearchEngine.py
 ----------------------------------------------------------------------
 |    Eric's Search Engine                                            |
 |                                                                    |
@@ -12,8 +12,8 @@ Would you like to import the index from disk? (y/n) n
 
 Seed URL: http://lyle.smu.edu/~fmoore
 Page limit: 60
-Stop words: stopwords.txt
-Thesaurus: thesaurus.csv
+Stop words: Input/stopwords.txt
+Thesaurus: Input/thesaurus.csv
 
 Beginning crawling...
 
@@ -94,7 +94,7 @@ Pages crawled: 60
 Pages indexed: 43
 Visited URLs: 60
 
-Outgoing URLs: 
+Outgoing URLs:
   +  http://lyle.smu.edu
   +  http://oracle.com.edgesuite.net/timeline/oracle/
   +  http://www.gedpage.com/soundex.html
@@ -109,7 +109,7 @@ Outgoing URLs:
   +  http://search.carrot2.org/stable/search
   +  http://9ol.es/porter_js_demo.html
 
-Broken URLs: 
+Broken URLs:
   +  mailto:fmoore@smu.edu
   +  mailto:fmoore@lyle.smu.edu
   +  http://lyle.smu.edu/~fmoore/syl_5330.pdf
@@ -120,7 +120,7 @@ Broken URLs:
   +  http://lyle.smu.edu/~fmoore/this_aint_gonna_work.htm
   +  http://lyle.smu.edu/~fmoore/\r\n
 
-Graphic URLs: 
+Graphic URLs:
   +  http://lyle.smu.edu/~fmoore/misc/permutermindex-example.jpg
   +  http://lyle.smu.edu/~fmoore/misc/bigram-example.jpg
   +  http://lyle.smu.edu/~fmoore/misc/roadmap-04-03-2018.jpg
@@ -136,7 +136,7 @@ Duplicate URLs:
 Building Term Frequency matrix... Done.
 
 
-Complete frequency matrix has been exported to tf_matrix.csv
+Complete frequency matrix has been exported to Output/tf_matrix.csv
 ----------------------------------------------------------------------
 
 Would you like to see the most frequent terms? (y/n) y
@@ -171,55 +171,55 @@ Beginning clustering...
 
 Documents clustered. Would you like to see their clustering? (y/n) y
 ----------------------------------------------------------------------
+Doc17:	No followers
+
+Doc15:
+		+ Doc13 (Distance: 0.994884876942)
+		+ Doc14 (Distance: 1.02270150452)
+		+ Doc16 (Distance: 1.34960311626)
+
+Doc34:
+		+ Doc4 (Distance: 1.31513947425)
+		+ Doc5 (Distance: 1.14508711013)
+		+ Doc6 (Distance: 0.614451804789)
+		+ Doc7 (Distance: 0.610285981808)
+		+ Doc8 (Distance: 0.614451804789)
+		+ Doc9 (Distance: 0.721393209883)
+		+ Doc10 (Distance: 0.692525693917)
+		+ Doc11 (Distance: 0.85416148165)
+		+ Doc12 (Distance: 0.883522634061)
+		+ Doc18 (Distance: 0.626783170528)
+		+ Doc19 (Distance: 0.610285981808)
+		+ Doc20 (Distance: 0.610285981808)
+		+ Doc21 (Distance: 1.09030982303)
+		+ Doc22 (Distance: 0.717848258651)
+		+ Doc23 (Distance: 0.782460796436)
+		+ Doc24 (Distance: 0.87481776528)
+		+ Doc25 (Distance: 0.801783725737)
+		+ Doc26 (Distance: 1.04490991702)
+		+ Doc28 (Distance: 0.814411017928)
+		+ Doc29 (Distance: 0.804959119256)
+		+ Doc31 (Distance: 0.974155835499)
+		+ Doc32 (Distance: 1.05945692673)
+		+ Doc33 (Distance: 0.944911182523)
+		+ Doc35 (Distance: 1.46036059288)
+		+ Doc37 (Distance: 0.85416148165)
+
 Doc39:
 		+ Doc27 (Distance: 1.13389341903)
+		+ Doc30 (Distance: 1.23097770997)
 		+ Doc36 (Distance: 0.696199596058)
 		+ Doc38 (Distance: 0.731925054711)
+		+ Doc40 (Distance: 0.823754471048)
 
-Doc25:
-		+ Doc13 (Distance: 0.997445717412)
-		+ Doc16 (Distance: 1.53861851632)
-		+ Doc17 (Distance: 1.81687104885)
-		+ Doc21 (Distance: 1.0326308782)
-		+ Doc35 (Distance: 1.47772577611)
-
-Doc9:
-		+ Doc0 (Distance: 0.728431359085)
-		+ Doc1 (Distance: 0.775912892229)
-		+ Doc2 (Distance: 2.03289278154)
-		+ Doc3 (Distance: 0.745736179208)
-		+ Doc4 (Distance: 1.21848015066)
-		+ Doc5 (Distance: 1.05220856162)
-		+ Doc6 (Distance: 0.416496563918)
-		+ Doc7 (Distance: 0.410325903324)
-		+ Doc8 (Distance: 0.416496563918)
-		+ Doc10 (Distance: 0.524890659168)
-		+ Doc11 (Distance: 0.688832197214)
-		+ Doc14 (Distance: 1.09264703863)
-		+ Doc15 (Distance: 0.997445717412)
-		+ Doc18 (Distance: 0.457366016959)
-		+ Doc19 (Distance: 0.410325903324)
-		+ Doc20 (Distance: 0.410325903324)
-		+ Doc22 (Distance: 0.610285981808)
-		+ Doc23 (Distance: 0.677630927179)
-		+ Doc24 (Distance: 0.788954358371)
-		+ Doc28 (Distance: 0.685118789045)
-		+ Doc29 (Distance: 0.765986092483)
-		+ Doc30 (Distance: 1.21638474042)
-		+ Doc31 (Distance: 0.936776932043)
-		+ Doc32 (Distance: 1.04001569847)
-		+ Doc33 (Distance: 0.829925002759)
-		+ Doc34 (Distance: 0.721393209883)
-		+ Doc37 (Distance: 0.779193722474)
-		+ Doc40 (Distance: 0.735402152928)
-
-Doc26:	No followers
-
-Doc12:	No followers
+Doc1:
+		+ Doc0 (Distance: 0.391230398218)
+		+ Doc2 (Distance: 2.0429070923)
+		+ Doc3 (Distance: 0.357142857143)
 
 
 Would you like to export this index to disk? (y/n) y
-Exported to "exported_index.obj".
+Exported to Output/exported_index.obj.
 ----------------------------------------------------------------------
 |    Eric's Search Engine                                            |
 |                                                                    |
@@ -239,7 +239,7 @@ Please enter a query or "stop": moore smu
 	 activity jan course overview introduction ir chpt"
 
 
-2.	[0.3090]  Freeman Moore - SMU Spring 2018 (/~fmoore/index_duplicate.htm)
+2.	[0.3090]  Freeman Moore - SMU Spring 2018 (/~fmoore/)
 
 	"spring freeman moore phd email fmooresmuedu spring
 	 cse fall cse keep looking course calendar latest
@@ -278,7 +278,7 @@ Please enter a query or "stop": moore smu
 
 ----------------------------------------------------------------------
 
-Please enter a query or "stop": Bob Ewell where Scout 
+Please enter a query or "stop": Bob Ewell where Scout
 ----------------------------------------------------------------------
 1.	[0.1318]  Mockingbird part 5 (/~fmoore/misc/text/mockingbird5.html)
 
@@ -448,7 +448,54 @@ Less than K/2 results. Performing thesaurus expansion...
 
 ----------------------------------------------------------------------
 
+Please enter a query or "stop": smu schedule
+----------------------------------------------------------------------
+1.	[0.3996]  SMU CSE 5337/7337 Spring 2018 Schedule (/~fmoore/schedule.htm)
+
+	"smu cse preliminary schedule page maintained
+	 latest schedule content and activities date topics
+	 activity jan course overview introduction ir chpt"
+
+
+2.	[0.2500]  Freeman Moore - SMU Spring 2018 (/~fmoore/)
+
+	"spring freeman moore phd email fmooresmuedu spring
+	 cse fall cse keep looking course calendar latest
+	 information spring tth caruth syllabus"
+
+
+3.	[0.2500]  Freeman Moore - SMU Fall 2017 (/~fmoore/index-fall2017.htm)
+
+	"fall freeman moore phd email fmoorelylesmuedu fall
+	 cse spring cse keep looking course calendar latest
+	 information fall mw caruth syllabus"
+
+
+4.	[0.2500]  Freeman Moore - SMU Spring 2017 (/~fmoore/index-final.htm)
+
+	"spring freeman moore phd email fmoorelylesmuedu
+	 fall cse spring tuesdaythursday caruth cse
+	 syllabus cse syllabus keep looking tentative
+	 course calendar"
+
+
+5.	[0.2500]  SMU CSE 5/7337 Spring 2018 text files" (/~fmoore/misc/text/index.php)
+
+	"additional text files support query implementation
+	 part part part part part hocuspocus word file
+	 testing exact match same words building1txt"
+
+
+6.	[0.2500]  SMU CSE 5/7337 Spring 2018 Textfiles (/~fmoore/textfiles/index.html)
+
+	"textfiles clustering golf golf golf golf golf
+	 basketball basketball basketball basketball
+	 basketball baseball baseball baseball baseball
+	 baseball football football football"
+
+
+----------------------------------------------------------------------
+
 Please enter a query or "stop": stop
 
 Goodbye!
-Erics-MacBook-Pro:Web-Crawler ericsmith$ 
