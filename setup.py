@@ -9,5 +9,5 @@ setup(
     author='ericsmith',
     author_email = 'eric@smu.edu',
     description = '',
-    install_requires = ['bs4', 'nltk', 'scikit-learn']
+    install_requires = ['bs4', 'nltk', 'scikit-learn', 'numpy']
 )

@@ -6,14 +6,22 @@ https://github.com/smitheric95/Web-Crawler<br>
 
 ## About
 This project is a custom web crawler and search engine written in [Python 3](https://www.python.org/downloads/release/python-364/). 
-It was meant for browsing content on the [course website](https://lyle.smu.edu/~fmoore/) for my 7337 Info Retrieval and Web Search class.
+It was meant for browsing content on the [course website](https://lyle.smu.edu/~fmoore/) for my 7337 Info Retrieval and Web Search class. 
 
-### Web Crawler
 
-### Search Engine
+It is an expansion on [Part 1](https://github.com/smitheric95/Web-Crawler/tree/part1), which was just a web crawler.
+
+### Differences in Part 2
+* Easier command line interface for executing the program
+* The web crawler now clusters documents in addition to indexing them.
+* Minor bug fixes for the crawler
+* The program now features a search engine allowing the user to query the pages crawled.<br> (See Search Engine Implementation below)
+* The index created from the crawler can now be imported and exported from disk.
+
 
 ### Main external libraries:
 * [SciKit-Learn](http://scikit-learn.org/stable/) for Euclidean distance calculation.
+* [Pickle](https://wiki.python.org/moin/UsingPickle) for importing and exporting the index.
 * [BeautifulSoup 4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) for HTML parsing.
 * [NLTK Porter Stemmer](http://www.nltk.org/api/nltk.stem.html) for stemming.
 <br>
@@ -53,30 +61,91 @@ optional arguments:
                         Maximum number of pages to crawl. (Required)
   -s STOPWORDS, --stopwords STOPWORDS
                         Stop words file: a newline separated list of stop
-                        words. (Default is stopwords.txt)
+                        words. (Default is Input/stopwords.txt)
   -t THESAURUS, --thesaurus THESAURUS
                         Thesaurus file: a comma separated list of words and
-                        their synonyms. (Default is thesaurus.csv)
+                        their synonyms. (Default is Input/thesaurus.csv)
 ```
 
 Note: If you're using a Mac and you encounter an SSL Certificate warning, you may need to run the command listed in [this StackOverflow answer](https://stackoverflow.com/a/42098127/8853372).
 <br>
 
-## Output
+## Running the Program
+The program gives user a simple, command line interface to use. 
+
+```commandline
+$ python SearchEngine.py
+----------------------------------------------------------------------
+|    Eric's Search Engine                                            |
+|                                                                    |
+|    [0] Exit                                                        |
+|    [1] Build Index                                                 |
+|    [2] Search Documents                                            |
+----------------------------------------------------------------------
+Please select an option:  
+```
+
+### Running the Crawler
+In order to start performing searches, you must first allow the crawler to build the index. Indexes can be built manually or imported from disk.
+
+```commandline
+Please select an option: 1
+----------------------------------------------------------------------
+Would you like to import the index from disk? (y/n) n
+
+Seed URL: http://lyle.smu.edu/~fmoore
+Page limit: 60
+Stop words: Input/stopwords.txt
+Thesaurus: Input/thesaurus.csv
+
+Beginning crawling...
+
+robots.txt: Disallowed['/~fmoore/dontgohere/'] Allowed[]
+
+1. Visiting: /~fmoore/ (Freeman Moore - SMU Spring 2018)
+2. Visiting: /~fmoore/index-fall2017.htm (Freeman Moore - SMU Fall 2017)
+...
+```
 
 The output of the crawler will be displayed in real time in the terminal window from which the project is run. <br>
 The crawler outputs:
 1. The URL and title of each page
 2. Outgoing, broken, and graphical (gif, jpg, jpeg, png) links
-3. Page duplicates (determined by hashing)
+3. Page duplicates determined by hashing
 4. 20 most common <i>stemmed</i> words and their document frequencies
+5. Document clusterings around 5 random leader documents (Added in Part 2)
 
-Also, a complete term frequency matrix will be exported to tf_matrix.csv. Example output files are listed in the project folder.    
+Also, a complete term frequency matrix will be exported to [Output/tf_matrix.csv](./Output/tf_matrix.csv).<br>
+Users are given the option to export the index created to [Output/exported_index.obj](./Output/exported_index.obj).
+
+<b>For an example of a complete output from the crawler, see [Output/Example Output.txt](./Output/Example%20Output.txt).</b> 
+
+### Running the Search Engine
+
+```commandline
+----------------------------------------------------------------------
+|    Eric's Search Engine                                            |
+|                                                                    |
+|    [0] Exit                                                        |
+|    [1] Build Index                                                 |
+|    [2] Search Documents                                            |
+----------------------------------------------------------------------
+Please select an option: 2
+----------------------------------------------------------------------
+
+Please enter a query or "stop": smu schedule
+----------------------------------------------------------------------
+1.	[0.3996]  SMU CSE 5337/7337 Spring 2018 Schedule (/~fmoore/schedule.htm)
+
+	"smu cse preliminary schedule page maintained
+	 latest schedule content and activities date topics
+	 activity jan course overview introduction ir chpt"
+```
 
 
 ## Crawler Implementation
 
-#### Crawler Object
+#### Crawler Class
 A WebCrawler object holds onto various forms of information about the pages it crawls.<br>
 This information includes but is not limited to:
 * <b>seed_url</b>: The starting URL used to initialize the crawler 
@@ -94,7 +163,6 @@ In order to perform the basic operations of a crawler, I implemented a custom cr
 
 The crawl() method can be summarized as follows:
 * Add the seed URL to the queue url_frontier
-
 * While the queue isn't empty:
     * Pop the next URL from the queue
     * If the URL meets the requirements of the robots.txt file:
@@ -107,4 +175,7 @@ The crawl() method can be summarized as follows:
 This crawler is <i>polite</i> in the sense that it checks the robots.txt file before visiting a page.<br>
 It is also relatively <i>robust</i> as it is immune to duplicate and broken pages - both of which are reported when the crawler is finished.
 
-The crawler also computes a term frequency matrix. Each unique word is stemmed with the NLTK Porter stemmer and its term and document frequencies are outputted.     
+The crawler also computes a term frequency matrix. Each unique word is stemmed with the NLTK Porter stemmer and its term and document frequencies are outputted.
+Document clusterings are determined by picking 5 random leaders and assigning followers to the leaders of shortest Euclidean distance. 
+
+## Search Engine Implementation 
