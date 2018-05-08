@@ -363,8 +363,8 @@ if __name__ == "__main__":
         [print("-", end="") for x in range(70)]
 
         # export frequency matrix to file
-        print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
-        f = open("tf_matrix.csv", "w")
+        print("\n\nComplete frequency matrix has been exported to Output/tf_matrix.csv")
+        f = open("Output/tf_matrix.csv", "w")
         f.write(crawler.print_frequency_matrix())
         f.close()
 

@@ -50,7 +50,7 @@ class SearchEngine(WebCrawler):
             raise
 
     # loads index from disk
-    def load_index(self, filename="exported_index.obj"):
+    def load_index(self, filename="Output/exported_index.obj"):
         try:
             f = open(filename, "rb")
         except IOError:
@@ -64,7 +64,7 @@ class SearchEngine(WebCrawler):
         print("Index successfully imported from disk.")
 
     # saves index from disk
-    def save_index(self, filename="exported_index.obj"):
+    def save_index(self, filename="Output/exported_index.obj"):
         f = open(filename, 'wb')
         pickle.dump(self.__dict__, f)
         f.close()
@@ -313,10 +313,10 @@ class SearchEngine(WebCrawler):
                         print(" Done.")
 
                         # export frequency matrix to file
-                        f = open("tf_matrix.csv", "w")
+                        f = open("Output/tf_matrix.csv", "w")
                         f.write(search_engine.print_frequency_matrix())
                         f.close()
-                        print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
+                        print("\n\nComplete frequency matrix has been exported to Output/tf_matrix.csv")
                         self.print_divider()
 
                         # ask user if they want to see tf matrix
@@ -357,7 +357,7 @@ class SearchEngine(WebCrawler):
 
                         if b_input == "y":
                             self.save_index()
-                            print("Exported to \"exported_index.obj\".")
+                            print("Exported to Output/exported_index.obj.")
 
             # user wants to enter search query
             elif int(main_menu_input) == 2:
@@ -406,9 +406,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Search Engine by Eric Smith - CSE 7337 Spring 2018")
     parser.add_argument("-p", "--pagelimit", help="Maximum number of pages to crawl. (Required)", required=False, default="60")
     parser.add_argument("-s", "--stopwords",
-                        help="Stop words file: a newline separated list of stop words. (Default is stopwords.txt)", required=False, default="stopwords.txt")
+                        help="Stop words file: a newline separated list of stop words. (Default is Input/stopwords.txt)", required=False, default="Input/stopwords.txt")
     parser.add_argument("-t", "--thesaurus",
-                        help="Thesaurus file: a comma separated list of words and their synonyms. (Default is thesaurus.csv)", required=False, default="thesaurus.csv")
+                        help="Thesaurus file: a comma separated list of words and their synonyms. (Default is Input/thesaurus.csv)", required=False, default="Input/thesaurus.csv")
 
     argument = parser.parse_args()
 
