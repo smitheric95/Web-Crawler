@@ -15,26 +15,39 @@ import string
 import codecs
 from nltk.stem import PorterStemmer
 
+
 class WebCrawler:
     def __init__(self, seed_url):
         self.seed_url = seed_url
         self.domain_url = "/".join(self.seed_url.split("/")[:3])
         self.robots_txt = None
+        self.stop_words_file = None
         self.page_limit = None
         self.stop_words = []  # list of words to be ignored when processing documents
         self.url_frontier = []  # list of urls not yet visited
         self.visited_urls = {}  # URL : (Title, DocumentID) (hash of content of a visited URL)
-        self.duplicate_urls = {}    # DocumentID : [URLs that produce that ID]
         self.outgoing_urls = []
         self.broken_urls = []
         self.graphic_urls = []
-        self.words = {}  # DocumentID : [words]
-        self.all_terms = []  # set of all terms in all documents
+        self.all_terms = []  # set of all stemmed terms in all documents
         self.frequency_matrix = []  # Term doc frequency matrix (row=term, col=doc)
+        self.num_pages_crawled = 0  # number of valid pages visited
+        self.num_pages_indexed = 0  # number of pages whose words have been stored
+
+        """
+        note: the attributes below only contain information from those documents whose 
+              words were saved (.txt, .htm, .html, .php)
+        """
+        self.duplicate_urls = {}  # DocumentID : [URLs that produce that ID]
+        self.doc_urls = {}  # DocumentID: first URL that produces that ID
+        self.doc_titles = {}  # DocumentID : title
+        self.doc_words = {}  # DocumentID : [words]
 
     # print the report produced from crawling a site
     def __str__(self):
-        report = "\nVisited URLs: " + str(len(self.visited_urls)) \
+        report = "\nPages crawled: " + str(self.num_pages_crawled) \
+                 + "\nPages indexed: " + str(self.num_pages_indexed) \
+                 + "\nVisited URLs: " + str(len(self.visited_urls)) \
                  + "\n\nOutgoing URLs: " + "\n  +  " + "\n  +  ".join(self.outgoing_urls) \
                  + "\n\nBroken URLs: " + "\n  +  " + "\n  +  ".join(self.broken_urls) \
                  + "\n\nGraphic URLs: " + "\n  +  " + "\n  +  ".join(self.graphic_urls) \
@@ -43,7 +56,7 @@ class WebCrawler:
         # print duplicate urls
         for key in range(len(self.duplicate_urls.keys())):
             report += "\t +  Doc" + str(key + 1) + ":\n"
-            for val in list(crawler.duplicate_urls.values())[key]:
+            for val in list(self.duplicate_urls.values())[key]:
                 report += "\t\t  +  " + val + "\n"
 
         return report
@@ -75,10 +88,20 @@ class WebCrawler:
 
     # sets the stop words list given a file with stop words separated by line
     def set_stop_words(self, filepath):
-        with open(filepath, "r") as stop_words_file:
-            stop_words = stop_words_file.readlines()
+        try:
+            with open(filepath, "r") as stop_words_file:
+                stop_words = stop_words_file.readlines()
 
-        self.stop_words = [x.strip() for x in stop_words]
+            self.stop_words = [x.strip() for x in stop_words]
+            self.stop_words_file = filepath
+
+        except IOError as e:
+            print("Error opening" + filepath + " error({0}): {1}".format(e.errno, e.strerror))
+        except ValueError:
+            print("Error opening" + filepath + ": Data is not correctly formatted. See README.")
+        except:
+            print("Error opening" + filepath + "Unexpected error:", sys.exc_info()[0])
+            raise
 
     '''
     returns whether or not a url is valid
@@ -134,13 +157,11 @@ class WebCrawler:
 
         self.url_frontier.append(self.seed_url + "/")
 
-        num_pages_crawled = 0
-
         '''
         pop from the URL frontier while the queue is not empty
         links in queue are valid, full urls
         '''
-        while self.url_frontier and (self.page_limit is None or num_pages_crawled < self.page_limit):
+        while self.url_frontier and (self.page_limit is None or self.num_pages_indexed < self.page_limit):
             # current_page refers to the url of the current page being processed
             current_page = self.url_frontier.pop(0)  # select the next url
 
@@ -154,8 +175,8 @@ class WebCrawler:
 
                 # basic HTTP error e.g. 404, 501, etc
                 except urllib.error.HTTPError as e:
-                    if current_page not in self.broken_urls:
-                        self.broken_urls.append(current_page)
+                    if current_page not in self.broken_urls and current_page is not None:
+                            self.broken_urls.append(current_page)
                 else:
                     current_content = str(handle.read())
 
@@ -170,23 +191,34 @@ class WebCrawler:
 
                     # mark that the page has been visited by adding to visited_url
                     self.visited_urls[current_page] = (current_title, current_doc_id)
-                    num_pages_crawled += 1
+                    self.num_pages_crawled += 1
 
-                    print(str(num_pages_crawled) + ". " + "Visiting: " +
+                    print(str(self.num_pages_crawled) + ". " + "Visiting: " +
                           current_page.replace(self.domain_url, "") + " (" + current_title + ")")
 
                     # if the page is an html document, we need to parse it for links
                     if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php", ".txt"])):
+                        # remove contents of title tag
+                        [s.extract() for s in soup('title')]
 
                         # format the content of the page
-                        formatted_content = codecs.escape_decode(bytes(soup.get_text().lower(), "utf-8"))[0].decode("utf-8")
+                        formatted_content = codecs.escape_decode(bytes(soup.get_text().lower(), "utf-8"))[0].decode("utf-8", errors='replace')
 
                         # store only the words of the file
                         content_words = list(re.sub('[' + string.punctuation + ']', '', formatted_content).split()[1:])
 
                         # keep track of only those words that are valid and not in the stop word collection
-                        self.words[current_doc_id] = [w for w in content_words
+                        self.doc_words[current_doc_id] = [w for w in content_words
                                                       if w not in self.stop_words and self.word_is_valid(w)]
+
+                        # store the title
+                        self.doc_titles[current_doc_id] = current_title
+
+                        # store the url if it hasn't been stored already (to avoid duplicates)
+                        if current_doc_id not in self.doc_urls:
+                            self.doc_urls[current_doc_id] = current_page
+
+                        self.num_pages_indexed += 1
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
@@ -194,12 +226,12 @@ class WebCrawler:
                             current_url = link.get('href')
 
                             # expand the url to include the domain
-                            if pwd not in current_url:
+                            if current_url is not None and pwd not in current_url:
                                 # only works if the resulting link is valid
                                 current_url = urllib.parse.urljoin(pwd, current_url)
 
                             # the link should be visited
-                            if self.url_is_valid(current_url):
+                            if current_url is not None and self.url_is_valid(current_url):
 
                                 # the link is within scope and hasn't been added to the queue
                                 if self.url_is_within_scope(current_url) and current_url not in self.url_frontier:
@@ -212,7 +244,7 @@ class WebCrawler:
                                     self.outgoing_urls.append(current_url)
 
                             # the link is broken
-                            elif current_url not in self.broken_urls:
+                            elif current_url not in self.broken_urls and current_url is not None:
                                 self.broken_urls.append(current_url)
 
                     # file is a graphic, mark it as such
@@ -221,19 +253,18 @@ class WebCrawler:
 
             else:
                 print("Not allowed: " + current_page.replace(self.domain_url, ""))
-        print("\nDone crawling.")
 
     '''
     convert word listings into term-document frequency matrix
     populates frequency_matrix and all_terms
     '''
     def build_frequency_matrix(self):
-        if self.words is not None:
+        if self.doc_words is not None:
             # use porter stemmer for comparing words
             stemmer = PorterStemmer()
 
             # grab the unique, stemmed terms from all the documents
-            self.all_terms = list(set([stemmer.stem(word) for word_list in self.words.values() for word in word_list]))
+            self.all_terms = list(set([stemmer.stem(word) for word_list in self.doc_words.values() for word in word_list]))
             self.all_terms.sort()
 
             # initialize frequency matrix for one row per term
@@ -244,7 +275,7 @@ class WebCrawler:
                 # append the number of times the stemmed words match
                 frequency_count = []
 
-                for word_list in self.words.values():
+                for word_list in self.doc_words.values():
                     stemmed_word_list = [stemmer.stem(word) for word in word_list]
                     frequency_count.append(stemmed_word_list.count(self.all_terms[term]))
 
@@ -254,9 +285,9 @@ class WebCrawler:
     def print_frequency_matrix(self):
         output_string = ","
 
-        if self.words is not None:
+        if self.doc_words is not None:
             # create file heading
-            for i in range(len(self.words.keys())):
+            for i in range(len(self.doc_words.keys())):
                 output_string += "Doc" + str(i) + ","
             output_string += "\n"
 
@@ -284,53 +315,3 @@ class WebCrawler:
 
         # return n most common
         return zip(reversed(sorted_terms[-n:]), reversed(term_totals[-n:]), reversed(doc_freqs[-n:]))
-
-
-if __name__ == "__main__":
-    crawler = WebCrawler("http://lyle.smu.edu/~fmoore")
-
-    try:
-        page_limit, stop_words = sys.argv[1:3]
-
-        crawler.set_page_limit(page_limit)
-        crawler.set_stop_words(stop_words)
-    except:
-        print("Error parsing input.\nUsage is: python WebCrawler.py <page limit> <stop words file>")
-    else:
-        [print("-", end="") for x in range(70)]
-        print("\nSeed URL: " + crawler.seed_url)
-        print("Page limit: " + str(page_limit))
-        print("Stop words: " + str(stop_words))
-        [print("-", end="") for x in range(70)]
-        print("\nBeginning crawling...\n")
-
-        crawler.crawl()
-        crawler.produce_duplicates()
-
-        [print("-", end="") for x in range(70)]
-
-        print(crawler)
-
-        [print("-", end="") for x in range(70)]
-        print("\n\nBuilding Term Frequency matrix...\n")
-
-        crawler.build_frequency_matrix()
-
-        print("Most Common Stemmed Terms:\n")
-        print("{: <15} {: >25} {: >25}".format("Term", "Term Frequency", "Document Frequency"))
-        print("{: <15} {: >25} {: >25}".format("----", "--------------", "------------------"))
-
-        count = 1
-        for i, j, k in crawler.n_most_common(20):
-            print("{: <15} {: >25} {: >25}".format((str(count) + ". " + i), j, k))
-            count += 1
-
-        [print("-", end="") for x in range(70)]
-
-        # export frequency matrix to file
-        print("\n\nComplete frequency matrix has been exported to tf_matrix.csv")
-        f = open("tf_matrix.csv", "w")
-        f.write(crawler.print_frequency_matrix())
-        f.close()
-
-    print("\n\nGoodbye!\n")
