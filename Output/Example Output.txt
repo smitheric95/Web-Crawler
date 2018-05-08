@@ -1,4 +1,4 @@
-$ python SearchEngine.py
+$ python SearchEngine.py 
 ----------------------------------------------------------------------
 |    Eric's Search Engine                                            |
 |                                                                    |
@@ -64,6 +64,7 @@ Not allowed: /~fmoore/dontgohere/badfile1.html
 37. Visiting: /~fmoore/misc/text/mockingbird5.html (Mockingbird part 5)
 38. Visiting: /~fmoore/misc/text/magictext.html (This is the magic file)
 39. Visiting: /~fmoore/misc/text/building1.txt (building1.txt)
+error page
 40. Visiting: /~fmoore/misc/text/building2.txt (building2.txt)
 41. Visiting: /~fmoore/textfiles/golf1.txt (golf1.txt)
 42. Visiting: /~fmoore/textfiles/golf2.txt (golf2.txt)
@@ -94,7 +95,7 @@ Pages crawled: 60
 Pages indexed: 43
 Visited URLs: 60
 
-Outgoing URLs:
+Outgoing URLs: 
   +  http://lyle.smu.edu
   +  http://oracle.com.edgesuite.net/timeline/oracle/
   +  http://www.gedpage.com/soundex.html
@@ -109,7 +110,7 @@ Outgoing URLs:
   +  http://search.carrot2.org/stable/search
   +  http://9ol.es/porter_js_demo.html
 
-Broken URLs:
+Broken URLs: 
   +  mailto:fmoore@smu.edu
   +  mailto:fmoore@lyle.smu.edu
   +  http://lyle.smu.edu/~fmoore/syl_5330.pdf
@@ -120,7 +121,7 @@ Broken URLs:
   +  http://lyle.smu.edu/~fmoore/this_aint_gonna_work.htm
   +  http://lyle.smu.edu/~fmoore/\r\n
 
-Graphic URLs:
+Graphic URLs: 
   +  http://lyle.smu.edu/~fmoore/misc/permutermindex-example.jpg
   +  http://lyle.smu.edu/~fmoore/misc/bigram-example.jpg
   +  http://lyle.smu.edu/~fmoore/misc/roadmap-04-03-2018.jpg
@@ -154,14 +155,14 @@ Term                       Term Frequency        Document Frequency
 7. jem                                 19                         5
 8. her                                 19                         5
 9. they                                18                        10
-10. footbal                            18                         7
-11. season                             17                        12
-12. have                               17                         6
+10. season                             18                         7
+11. footbal                            18                         6
+12. have                               17                        12
 13. game                               16                         9
 14. atticu                             16                         4
 15. one                                15                        12
-16. chpt                               14                         5
-17. basketbal                          14                         1
+16. basketbal                          15                         5
+17. chpt                               14                         1
 18. time                               13                        10
 19. their                              13                         9
 20. ha                                 13                         7
@@ -171,51 +172,51 @@ Beginning clustering...
 
 Documents clustered. Would you like to see their clustering? (y/n) y
 ----------------------------------------------------------------------
-Doc17:	No followers
+Doc29:
+		+ Doc16 (Distance: 1.53363646811)
+		+ Doc17 (Distance: 1.78999486945)
+		+ Doc27 (Distance: 1.08091042503)
+		+ Doc30 (Distance: 1.13389341903)
 
-Doc15:
-		+ Doc13 (Distance: 0.994884876942)
-		+ Doc14 (Distance: 1.02270150452)
-		+ Doc16 (Distance: 1.34960311626)
-
-Doc34:
-		+ Doc4 (Distance: 1.31513947425)
-		+ Doc5 (Distance: 1.14508711013)
-		+ Doc6 (Distance: 0.614451804789)
-		+ Doc7 (Distance: 0.610285981808)
-		+ Doc8 (Distance: 0.614451804789)
-		+ Doc9 (Distance: 0.721393209883)
-		+ Doc10 (Distance: 0.692525693917)
-		+ Doc11 (Distance: 0.85416148165)
-		+ Doc12 (Distance: 0.883522634061)
-		+ Doc18 (Distance: 0.626783170528)
-		+ Doc19 (Distance: 0.610285981808)
-		+ Doc20 (Distance: 0.610285981808)
-		+ Doc21 (Distance: 1.09030982303)
-		+ Doc22 (Distance: 0.717848258651)
-		+ Doc23 (Distance: 0.782460796436)
-		+ Doc24 (Distance: 0.87481776528)
-		+ Doc25 (Distance: 0.801783725737)
-		+ Doc26 (Distance: 1.04490991702)
-		+ Doc28 (Distance: 0.814411017928)
-		+ Doc29 (Distance: 0.804959119256)
-		+ Doc31 (Distance: 0.974155835499)
-		+ Doc32 (Distance: 1.05945692673)
-		+ Doc33 (Distance: 0.944911182523)
-		+ Doc35 (Distance: 1.46036059288)
-		+ Doc37 (Distance: 0.85416148165)
-
-Doc39:
-		+ Doc27 (Distance: 1.13389341903)
-		+ Doc30 (Distance: 1.23097770997)
-		+ Doc36 (Distance: 0.696199596058)
-		+ Doc38 (Distance: 0.731925054711)
-		+ Doc40 (Distance: 0.823754471048)
+Doc18:
+		+ Doc2 (Distance: 1.99616980178)
+		+ Doc4 (Distance: 1.19095228575)
+		+ Doc5 (Distance: 1.01015254455)
+		+ Doc6 (Distance: 0.267261241912)
+		+ Doc7 (Distance: 0.257539376819)
+		+ Doc8 (Distance: 0.257539376819)
+		+ Doc10 (Distance: 0.410325903324)
+		+ Doc11 (Distance: 0.646813224153)
+		+ Doc12 (Distance: 0.755928946018)
+		+ Doc13 (Distance: 0.914732033919)
+		+ Doc14 (Distance: 1.0177004892)
+		+ Doc15 (Distance: 0.920292766195)
+		+ Doc19 (Distance: 0.257539376819)
+		+ Doc20 (Distance: 0.257539376819)
+		+ Doc21 (Distance: 1.00508909139)
+		+ Doc22 (Distance: 0.51010203061)
+		+ Doc23 (Distance: 0.597614304667)
+		+ Doc24 (Distance: 0.707106781187)
+		+ Doc25 (Distance: 0.658538889807)
+		+ Doc26 (Distance: 0.9583148475)
+		+ Doc28 (Distance: 0.606091526731)
+		+ Doc31 (Distance: 0.860113898485)
+		+ Doc32 (Distance: 0.979379228629)
+		+ Doc33 (Distance: 0.836049993623)
+		+ Doc34 (Distance: 0.626783170528)
+		+ Doc35 (Distance: 1.44631833795)
+		+ Doc36 (Distance: 0.618589574132)
+		+ Doc37 (Distance: 0.710705312219)
+		+ Doc40 (Distance: 0.634871029808)
 
 Doc1:
 		+ Doc0 (Distance: 0.391230398218)
-		+ Doc2 (Distance: 2.0429070923)
 		+ Doc3 (Distance: 0.357142857143)
+
+Doc38:
+		+ Doc39 (Distance: 0.738862888056)
+
+Doc9:	No followers
 
 
 Would you like to export this index to disk? (y/n) y
@@ -328,7 +329,7 @@ Please enter a query or "stop": Bob Ewell where Scout
 
 Please enter a query or "stop": three year story
 ----------------------------------------------------------------------
-1.	[0.1306]  Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
+1.	[0.1307]  Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
 
 	"mockingbird part kill mockingbird primarily novel
 	 growing up under extraordinary circumstances
@@ -351,11 +352,11 @@ Please enter a query or "stop": three year story
 	 spending"
 
 
-4.	[0.0575]  basketball1.txt (/~fmoore/textfiles/basketball1.txt)
+4.	[0.0573]  basketball1.txt (/~fmoore/textfiles/basketball1.txt)
 
-	"normal circumstances news dirk nowitzki done year
-	 would devastating but thursdays announcement met
-	 shrug because his season ended last october"
+	"under normal circumstances news dirk nowitzki done
+	 year would devastating but thursdays announcement
+	 met shrug because his season ended last"
 
 
 5.	[0.0444]  Mockingbird part 5 (/~fmoore/misc/text/mockingbird5.html)
@@ -365,11 +366,11 @@ Please enter a query or "stop": three year story
 	 available main floor so invitation"
 
 
-6.	[0.0427]  golf2.txt (/~fmoore/textfiles/golf2.txt)
+6.	[0.0418]  golf2.txt (/~fmoore/textfiles/golf2.txt)
 
-	"haas nearly shot his age friday take lead into
+	"jay haas nearly shot his age friday take lead into
 	 hole saturday finish professional golf
-	 associations misubishi classic year old haas"
+	 associations misubishi classic year old"
 
 
 ----------------------------------------------------------------------
@@ -385,17 +386,17 @@ Please enter a query or "stop": Atticus to defend Maycomb
 
 2.	[0.0766]  baseball2.txt (/~fmoore/textfiles/baseball2.txt)
 
-	"opening day and one day our team going win whole
-	 bleeping thing its opening day and one day am
-	 president"
+	"its opening day and one day our team going win
+	 whole bleeping thing its opening day and one day
+	 am"
 
 
 3.	[0.0649]  basketball5.txt (/~fmoore/textfiles/basketball5.txt)
 
-	"limitedcontact sport played rectangular court
-	 while most often played team sport five players
-	 each side threeonthree twoontwo and oneonone
-	 competitions"
+	"basketball limitedcontact sport played rectangular
+	 court while most often played team sport five
+	 players each side threeonthree twoontwo and
+	 oneonone"
 
 
 4.	[0.0640]  Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
@@ -439,59 +440,26 @@ Less than K/2 results. Performing thesaurus expansion...
 	 testing exact match same words building1txt"
 
 
-3.	[0.0608]  baseball5.txt (/~fmoore/textfiles/baseball5.txt)
+3.	[0.0604]  baseball5.txt (/~fmoore/textfiles/baseball5.txt)
 
-	"mann ray people come ray theyll come iowa reasons
-	 they cant even fathom theyll turn up your driveway
-	 not knowing"
+	"terence mann ray people come ray theyll come iowa
+	 reasons they cant even fathom theyll turn up your
+	 driveway not"
 
 
 ----------------------------------------------------------------------
 
-Please enter a query or "stop": smu schedule
+Please enter a query or "stop": buildingone buildingtwo buildingthree
+Less than K/2 results. Performing thesaurus expansion...
 ----------------------------------------------------------------------
-1.	[0.3996]  SMU CSE 5337/7337 Spring 2018 Schedule (/~fmoore/schedule.htm)
+1.	[1.0000]  building1.txt (/~fmoore/misc/text/building1.txt)
 
-	"smu cse preliminary schedule page maintained
-	 latest schedule content and activities date topics
-	 activity jan course overview introduction ir chpt"
+	"buildingone buildingtwo buildingthree"
 
 
-2.	[0.2500]  Freeman Moore - SMU Spring 2018 (/~fmoore/)
+2.	[1.0000]  building2.txt (/~fmoore/misc/text/building2.txt)
 
-	"spring freeman moore phd email fmooresmuedu spring
-	 cse fall cse keep looking course calendar latest
-	 information spring tth caruth syllabus"
-
-
-3.	[0.2500]  Freeman Moore - SMU Fall 2017 (/~fmoore/index-fall2017.htm)
-
-	"fall freeman moore phd email fmoorelylesmuedu fall
-	 cse spring cse keep looking course calendar latest
-	 information fall mw caruth syllabus"
-
-
-4.	[0.2500]  Freeman Moore - SMU Spring 2017 (/~fmoore/index-final.htm)
-
-	"spring freeman moore phd email fmoorelylesmuedu
-	 fall cse spring tuesdaythursday caruth cse
-	 syllabus cse syllabus keep looking tentative
-	 course calendar"
-
-
-5.	[0.2500]  SMU CSE 5/7337 Spring 2018 text files" (/~fmoore/misc/text/index.php)
-
-	"additional text files support query implementation
-	 part part part part part hocuspocus word file
-	 testing exact match same words building1txt"
-
-
-6.	[0.2500]  SMU CSE 5/7337 Spring 2018 Textfiles (/~fmoore/textfiles/index.html)
-
-	"textfiles clustering golf golf golf golf golf
-	 basketball basketball basketball basketball
-	 basketball baseball baseball baseball baseball
-	 baseball football football football"
+	"buildingthree buildingtwo buildingone"
 
 
 ----------------------------------------------------------------------
