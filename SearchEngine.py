@@ -202,7 +202,7 @@ class SearchEngine(WebCrawler):
         sorted_scores = sorted(scores.items(), key=lambda x: x[1], reverse=True)
 
         # populate 2D list sorted results: [[score, title, URL, first 20 words]], but only keep results if score > 0
-        results = [[score, self.doc_titles[doc_id], self.doc_urls[doc_id].replace(self.domain_url, ''),
+        results = [['%06.4f' % score, self.doc_titles[doc_id], self.doc_urls[doc_id].replace(self.domain_url, ''),
                     " ".join(self.doc_words[doc_id][:20])] for doc_id, score in sorted_scores if score > 0]
 
         # Handle K, < K, and K/2 results
@@ -297,7 +297,7 @@ class SearchEngine(WebCrawler):
                         # ask user if they want to see optional output
                         info_input = "-1"
                         while info_input != "y" and info_input != "n":
-                            info_input = input("Would you like to see info about the pages crawled? (y/n )").lower()
+                            info_input = input("Would you like to see info about the pages crawled? (y/n) ").lower()
 
                         # show user crawler duplicates, broken urls, etc
                         if info_input == "y":
@@ -366,7 +366,7 @@ class SearchEngine(WebCrawler):
                 else:
                     while True:
                         # prompt user to enter query
-                        query_input = input("\nPlease enter a query:")
+                        query_input = input("\nPlease enter a query or \"stop\": ")
 
                         # query is valid
                         if self.validate_query(query_input):
@@ -383,10 +383,10 @@ class SearchEngine(WebCrawler):
                                 # display results
                                 if len(results) > 0:
                                     for i in range(len(results)):
-                                        print("[" + str(i+1) + ".\t" + str(results[i][0]) + "]")
-                                        print("\t" + results[i][1] + " (" + results[i][2] + ")")
-                                        print("\t\"" + "\n\t ".join(wrap(results[i][3], 50)) + "\"")
+                                        print(str(i+1) + ".\t[" + str(results[i][0]) + "]  " + results[i][1] + " (" + results[i][2] + ")")
                                         print()
+                                        print("\t\"" + "\n\t ".join(wrap(results[i][3], 50)) + "\"")
+                                        print("\n")
                                 else:
                                     print("No results found.")
                                 self.print_divider()
@@ -404,7 +404,7 @@ if __name__ == "__main__":
 
     # handle command line arguments
     parser = argparse.ArgumentParser(description="Search Engine by Eric Smith - CSE 7337 Spring 2018")
-    parser.add_argument("-p", "--pagelimit", help="Maximum number of pages to crawl. (Required)", required=True, default="")
+    parser.add_argument("-p", "--pagelimit", help="Maximum number of pages to crawl. (Required)", required=False, default="60")
     parser.add_argument("-s", "--stopwords",
                         help="Stop words file: a newline separated list of stop words. (Default is stopwords.txt)", required=False, default="stopwords.txt")
     parser.add_argument("-t", "--thesaurus",

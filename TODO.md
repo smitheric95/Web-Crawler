@@ -16,14 +16,9 @@
         - if a user enters "nice" should it is expanded to "nice beautiful fancy"
             
  - etc:
- *  - does 60 apply to pages crawled or documents collected??
     - clean up output 
         - make consistent
     - uncomment crawler main() code
-    - "building term freq matrix..." lags
     - add cache thing to gitignore
-    - try entering query w space
-    - "enter a query (stop to stop)"
-    - shouldn't self.titles have duplicate urls?
     - test file i/o errors
     - run crawler w 60 docs 

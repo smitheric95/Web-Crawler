@@ -1,4 +1,4 @@
-/Users/ericsmith/anaconda/bin/python.app /Users/ericsmith/Projects/Web-Crawler/SearchEngine.py -p 60 -s stopwords.txt
+Erics-MacBook-Pro:Web-Crawler ericsmith$ python SearchEngine.py -p 60
 ----------------------------------------------------------------------
 |    Eric's Search Engine                                            |
 |                                                                    |
@@ -8,7 +8,7 @@
 ----------------------------------------------------------------------
 Please select an option: 1
 ----------------------------------------------------------------------
-Would you like to import the index from disk? (y/n)n
+Would you like to import the index from disk? (y/n) n
 
 Seed URL: http://lyle.smu.edu/~fmoore
 Page limit: 60
@@ -88,8 +88,10 @@ Not allowed: /~fmoore/dontgohere/badfile1.html
 
 Index built.
 ----------------------------------------------------------------------
-Would you like to see info about the pages crawled? (y/n)y
+Would you like to see info about the pages crawled? (y/n) y
 
+Pages crawled: 60
+Pages indexed: 43
 Visited URLs: 60
 
 Outgoing URLs: 
@@ -137,9 +139,7 @@ Building Term Frequency matrix... Done.
 Complete frequency matrix has been exported to tf_matrix.csv
 ----------------------------------------------------------------------
 
-Would you like to see the most frequent terms? (y/n) 
-
-y
+Would you like to see the most frequent terms? (y/n) y
 ----------------------------------------------------------------------
 Most Common Stemmed Terms:
 
@@ -169,58 +169,56 @@ Term                       Term Frequency        Document Frequency
 
 Beginning clustering...
 
-Documents clustered. Would you like to see their clustering? (y/n) 
-
-y
+Documents clustered. Would you like to see their clustering? (y/n) y
 ----------------------------------------------------------------------
-Doc32:	No followers
+Doc39:
+		+ Doc27 (Distance: 1.13389341903)
+		+ Doc36 (Distance: 0.696199596058)
+		+ Doc38 (Distance: 0.731925054711)
+
+Doc25:
+		+ Doc13 (Distance: 0.997445717412)
+		+ Doc16 (Distance: 1.53861851632)
+		+ Doc17 (Distance: 1.81687104885)
+		+ Doc21 (Distance: 1.0326308782)
+		+ Doc35 (Distance: 1.47772577611)
+
+Doc9:
+		+ Doc0 (Distance: 0.728431359085)
+		+ Doc1 (Distance: 0.775912892229)
+		+ Doc2 (Distance: 2.03289278154)
+		+ Doc3 (Distance: 0.745736179208)
+		+ Doc4 (Distance: 1.21848015066)
+		+ Doc5 (Distance: 1.05220856162)
+		+ Doc6 (Distance: 0.416496563918)
+		+ Doc7 (Distance: 0.410325903324)
+		+ Doc8 (Distance: 0.416496563918)
+		+ Doc10 (Distance: 0.524890659168)
+		+ Doc11 (Distance: 0.688832197214)
+		+ Doc14 (Distance: 1.09264703863)
+		+ Doc15 (Distance: 0.997445717412)
+		+ Doc18 (Distance: 0.457366016959)
+		+ Doc19 (Distance: 0.410325903324)
+		+ Doc20 (Distance: 0.410325903324)
+		+ Doc22 (Distance: 0.610285981808)
+		+ Doc23 (Distance: 0.677630927179)
+		+ Doc24 (Distance: 0.788954358371)
+		+ Doc28 (Distance: 0.685118789045)
+		+ Doc29 (Distance: 0.765986092483)
+		+ Doc30 (Distance: 1.21638474042)
+		+ Doc31 (Distance: 0.936776932043)
+		+ Doc32 (Distance: 1.04001569847)
+		+ Doc33 (Distance: 0.829925002759)
+		+ Doc34 (Distance: 0.721393209883)
+		+ Doc37 (Distance: 0.779193722474)
+		+ Doc40 (Distance: 0.735402152928)
 
 Doc26:	No followers
 
-Doc8:
-		+ Doc0 (Distance: 0.630840061881)
-		+ Doc1 (Distance: 0.685118789045)
-		+ Doc2 (Distance: 2.00254939555)
-		+ Doc3 (Distance: 0.650745255653)
-		+ Doc4 (Distance: 1.19309236346)
-		+ Doc5 (Distance: 1.00254777483)
-		+ Doc9 (Distance: 0.416496563918)
-		+ Doc10 (Distance: 0.364215679542)
-		+ Doc11 (Distance: 0.618589574132)
-		+ Doc12 (Distance: 0.731925054711)
-		+ Doc13 (Distance: 0.93949617414)
-		+ Doc14 (Distance: 1.03015750728)
-		+ Doc15 (Distance: 0.928571428571)
-		+ Doc18 (Distance: 0.257539376819)
-		+ Doc19 (Distance: 0.15971914125)
-		+ Doc20 (Distance: 0.15971914125)
-		+ Doc21 (Distance: 1.0177004892)
-		+ Doc22 (Distance: 0.47915742375)
-		+ Doc23 (Distance: 0.571428571429)
-		+ Doc28 (Distance: 0.571428571429)
-		+ Doc30 (Distance: 1.1517511069)
-		+ Doc33 (Distance: 0.779193722474)
-		+ Doc34 (Distance: 0.614451804789)
-		+ Doc35 (Distance: 1.46385010942)
-		+ Doc36 (Distance: 0.606091526731)
-		+ Doc37 (Distance: 0.681385143869)
-		+ Doc39 (Distance: 0.792181179029)
-		+ Doc40 (Distance: 0.630840061881)
-
-Doc6:
-		+ Doc7 (Distance: 0.0714285714286)
-		+ Doc24 (Distance: 0.685118789045)
-		+ Doc27 (Distance: 1.09030982303)
-		+ Doc29 (Distance: 0.658538889807)
-		+ Doc31 (Distance: 0.8630747124)
-		+ Doc38 (Distance: 0.677630927179)
-
-Doc25:
-		+ Doc16 (Distance: 1.53861851632)
-		+ Doc17 (Distance: 1.81687104885)
+Doc12:	No followers
 
 
-Would you like to export this index to disk? (y/n)y
+Would you like to export this index to disk? (y/n) y
 Exported to "exported_index.obj".
 ----------------------------------------------------------------------
 |    Eric's Search Engine                                            |
@@ -232,219 +230,225 @@ Exported to "exported_index.obj".
 Please select an option: 2
 ----------------------------------------------------------------------
 
-Please enter a query:moore smu
+Please enter a query or "stop": moore smu
 ----------------------------------------------------------------------
-1.	0.3477646053894112
-	SMU CSE 5337/7337 Spring 2018 Schedule (/~fmoore/schedule.htm)
-	smu cse preliminary schedule page
-	maintained latest schedule content and
-	activities date topics activity jan
-	course overview introduction ir chpt
+1.	[0.3478]  SMU CSE 5337/7337 Spring 2018 Schedule (/~fmoore/schedule.htm)
 
-2.	0.30895291564196226
-	Freeman Moore - SMU Spring 2018 (/~fmoore/index_duplicate.htm)
-	spring freeman moore phd email
-	fmooresmuedu spring cse fall cse keep
-	looking course calendar latest
-	information spring tth caruth syllabus
+	"smu cse preliminary schedule page maintained
+	 latest schedule content and activities date topics
+	 activity jan course overview introduction ir chpt"
 
-3.	0.3065544201634076
-	Freeman Moore - SMU Spring 2017 (/~fmoore/index-final.htm)
-	spring freeman moore phd email
-	fmoorelylesmuedu fall cse spring
-	tuesdaythursday caruth cse syllabus cse
-	syllabus keep looking tentative course
-	calendar
 
-4.	0.29952574566311774
-	Freeman Moore - SMU Fall 2017 (/~fmoore/index-fall2017.htm)
-	fall freeman moore phd email
-	fmoorelylesmuedu fall cse spring cse
-	keep looking course calendar latest
-	information fall mw caruth syllabus
+2.	[0.3090]  Freeman Moore - SMU Spring 2018 (/~fmoore/index_duplicate.htm)
 
-5.	0.25
-	SMU CSE 5/7337 Spring 2018 text files" (/~fmoore/misc/text/index.php)
-	additional text files support query
-	implementation part part part part part
-	hocuspocus word file testing exact match
-	same words building1txt
+	"spring freeman moore phd email fmooresmuedu spring
+	 cse fall cse keep looking course calendar latest
+	 information spring tth caruth syllabus"
 
-6.	0.25
-	SMU CSE 5/7337 Spring 2018 Textfiles (/~fmoore/textfiles/index.html)
-	textfiles clustering golf golf golf golf
-	golf basketball basketball basketball
-	basketball basketball baseball baseball
-	baseball baseball baseball football
-	football football
 
-----------------------------------------------------------------------
+3.	[0.3066]  Freeman Moore - SMU Spring 2017 (/~fmoore/index-final.htm)
 
-Please enter a query:Bob Ewell where Scout
-----------------------------------------------------------------------
-1.	0.131807854628813
-	Mockingbird part 5 (/~fmoore/misc/text/mockingbird5.html)
-	mockingbird part atticus does not want
-	jem and scout present tom robinsons
-	trial no seat available main floor so
-	invitation
+	"spring freeman moore phd email fmoorelylesmuedu
+	 fall cse spring tuesdaythursday caruth cse
+	 syllabus cse syllabus keep looking tentative
+	 course calendar"
 
-2.	0.03240655268036084
-	Mockingbird part 4 (/~fmoore/misc/text/mockingbird4.html)
-	mockingbird part story takes place
-	during three years great depression
-	fictional tired old town maycomb alabama
-	seat maycomb county focuses
 
-3.	0.007464268426924904
-	Mockingbird part 3 (/~fmoore/misc/text/mockingbird3.html)
-	mockingbird part suddenly scout and jem
-	have tolerate barrage racial slurs and
-	insults because atticus role trial
-	during time scout
+4.	[0.2995]  Freeman Moore - SMU Fall 2017 (/~fmoore/index-fall2017.htm)
 
-4.	0.006808680491065539
-	Mockingbird part 2 (/~fmoore/misc/text/mockingbird2.html)
-	mockingbird part only neighbor puzzles
-	them mysterious arthur radley nicknamed
-	boo never comes outside dill another
-	neighbors nephew starts spending
+	"fall freeman moore phd email fmoorelylesmuedu fall
+	 cse spring cse keep looking course calendar latest
+	 information fall mw caruth syllabus"
 
-5.	0.006465398088271215
-	Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
-	mockingbird part kill mockingbird
-	primarily novel growing up under
-	extraordinary circumstances southern
-	united states story covers span three
-	years during
 
-6.	0.0055086562960636075
-	baseball4.txt (/~fmoore/textfiles/baseball4.txt)
-	oddsmakers betdsi sportsbook have ohtani
-	fever much all those baseball scouts and
-	writers tripping over themselves they
-	try make amends
+5.	[0.2500]  SMU CSE 5/7337 Spring 2018 text files" (/~fmoore/misc/text/index.php)
+
+	"additional text files support query implementation
+	 part part part part part hocuspocus word file
+	 testing exact match same words building1txt"
+
+
+6.	[0.2500]  SMU CSE 5/7337 Spring 2018 Textfiles (/~fmoore/textfiles/index.html)
+
+	"textfiles clustering golf golf golf golf golf
+	 basketball basketball basketball basketball
+	 basketball baseball baseball baseball baseball
+	 baseball football football football"
+
 
 ----------------------------------------------------------------------
 
-Please enter a query:three year story
+Please enter a query or "stop": Bob Ewell where Scout 
 ----------------------------------------------------------------------
-1.	0.13055215471924914
-	Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
-	mockingbird part kill mockingbird
-	primarily novel growing up under
-	extraordinary circumstances southern
-	united states story covers span three
-	years during
+1.	[0.1318]  Mockingbird part 5 (/~fmoore/misc/text/mockingbird5.html)
 
-2.	0.0984706733120353
-	Mockingbird part 4 (/~fmoore/misc/text/mockingbird4.html)
-	mockingbird part story takes place
-	during three years great depression
-	fictional tired old town maycomb alabama
-	seat maycomb county focuses
+	"mockingbird part atticus does not want jem and
+	 scout present tom robinsons trial no seat
+	 available main floor so invitation"
 
-3.	0.09329205676547586
-	Mockingbird part 2 (/~fmoore/misc/text/mockingbird2.html)
-	mockingbird part only neighbor puzzles
-	them mysterious arthur radley nicknamed
-	boo never comes outside dill another
-	neighbors nephew starts spending
 
-4.	0.05747717606208001
-	basketball1.txt (/~fmoore/textfiles/basketball1.txt)
-	normal circumstances news dirk nowitzki
-	done year would devastating but
-	thursdays announcement met shrug because
-	his season ended last october
+2.	[0.0324]  Mockingbird part 4 (/~fmoore/misc/text/mockingbird4.html)
 
-5.	0.044400200499563856
-	Mockingbird part 5 (/~fmoore/misc/text/mockingbird5.html)
-	mockingbird part atticus does not want
-	jem and scout present tom robinsons
-	trial no seat available main floor so
-	invitation
+	"mockingbird part story takes place during three
+	 years great depression fictional tired old town
+	 maycomb alabama seat maycomb county focuses"
 
-6.	0.0426892628670409
-	golf2.txt (/~fmoore/textfiles/golf2.txt)
-	haas nearly shot his age friday take
-	lead into hole saturday finish
-	professional golf associations misubishi
-	classic year old haas
 
-----------------------------------------------------------------------
+3.	[0.0075]  Mockingbird part 3 (/~fmoore/misc/text/mockingbird3.html)
 
-Please enter a query:Atticus to defend Maycomb
-----------------------------------------------------------------------
-1.	0.11612134897403717
-	Mockingbird part 4 (/~fmoore/misc/text/mockingbird4.html)
-	mockingbird part story takes place
-	during three years great depression
-	fictional tired old town maycomb alabama
-	seat maycomb county focuses
+	"mockingbird part suddenly scout and jem have
+	 tolerate barrage racial slurs and insults because
+	 atticus role trial during time scout"
 
-2.	0.07660675680661679
-	baseball2.txt (/~fmoore/textfiles/baseball2.txt)
-	opening day and one day our team going
-	win whole bleeping thing its opening day
-	and one day am president
 
-3.	0.06491068190227307
-	basketball5.txt (/~fmoore/textfiles/basketball5.txt)
-	limitedcontact sport played rectangular
-	court while most often played team sport
-	five players each side threeonthree
-	twoontwo and oneonone competitions
+4.	[0.0068]  Mockingbird part 2 (/~fmoore/misc/text/mockingbird2.html)
 
-4.	0.06397973776219783
-	Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
-	mockingbird part kill mockingbird
-	primarily novel growing up under
-	extraordinary circumstances southern
-	united states story covers span three
-	years during
+	"mockingbird part only neighbor puzzles them
+	 mysterious arthur radley nicknamed boo never comes
+	 outside dill another neighbors nephew starts
+	 spending"
 
-5.	0.030000213425339324
-	Mockingbird part 2 (/~fmoore/misc/text/mockingbird2.html)
-	mockingbird part only neighbor puzzles
-	them mysterious arthur radley nicknamed
-	boo never comes outside dill another
-	neighbors nephew starts spending
 
-6.	0.014905952975708925
-	Mockingbird part 5 (/~fmoore/misc/text/mockingbird5.html)
-	mockingbird part atticus does not want
-	jem and scout present tom robinsons
-	trial no seat available main floor so
-	invitation
+5.	[0.0065]  Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
+
+	"mockingbird part kill mockingbird primarily novel
+	 growing up under extraordinary circumstances
+	 southern united states story covers span three
+	 years during"
+
+
+6.	[0.0055]  baseball4.txt (/~fmoore/textfiles/baseball4.txt)
+
+	"oddsmakers betdsi sportsbook have ohtani fever
+	 much all those baseball scouts and writers
+	 tripping over themselves they try make amends"
+
 
 ----------------------------------------------------------------------
 
-Please enter a query:hocuspocus thisworks
+Please enter a query or "stop": three year story
+----------------------------------------------------------------------
+1.	[0.1306]  Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
+
+	"mockingbird part kill mockingbird primarily novel
+	 growing up under extraordinary circumstances
+	 southern united states story covers span three
+	 years during"
+
+
+2.	[0.0985]  Mockingbird part 4 (/~fmoore/misc/text/mockingbird4.html)
+
+	"mockingbird part story takes place during three
+	 years great depression fictional tired old town
+	 maycomb alabama seat maycomb county focuses"
+
+
+3.	[0.0933]  Mockingbird part 2 (/~fmoore/misc/text/mockingbird2.html)
+
+	"mockingbird part only neighbor puzzles them
+	 mysterious arthur radley nicknamed boo never comes
+	 outside dill another neighbors nephew starts
+	 spending"
+
+
+4.	[0.0575]  basketball1.txt (/~fmoore/textfiles/basketball1.txt)
+
+	"normal circumstances news dirk nowitzki done year
+	 would devastating but thursdays announcement met
+	 shrug because his season ended last october"
+
+
+5.	[0.0444]  Mockingbird part 5 (/~fmoore/misc/text/mockingbird5.html)
+
+	"mockingbird part atticus does not want jem and
+	 scout present tom robinsons trial no seat
+	 available main floor so invitation"
+
+
+6.	[0.0427]  golf2.txt (/~fmoore/textfiles/golf2.txt)
+
+	"haas nearly shot his age friday take lead into
+	 hole saturday finish professional golf
+	 associations misubishi classic year old haas"
+
+
+----------------------------------------------------------------------
+
+Please enter a query or "stop": Atticus to defend Maycomb
+----------------------------------------------------------------------
+1.	[0.1161]  Mockingbird part 4 (/~fmoore/misc/text/mockingbird4.html)
+
+	"mockingbird part story takes place during three
+	 years great depression fictional tired old town
+	 maycomb alabama seat maycomb county focuses"
+
+
+2.	[0.0766]  baseball2.txt (/~fmoore/textfiles/baseball2.txt)
+
+	"opening day and one day our team going win whole
+	 bleeping thing its opening day and one day am
+	 president"
+
+
+3.	[0.0649]  basketball5.txt (/~fmoore/textfiles/basketball5.txt)
+
+	"limitedcontact sport played rectangular court
+	 while most often played team sport five players
+	 each side threeonthree twoontwo and oneonone
+	 competitions"
+
+
+4.	[0.0640]  Mockingbird novel part 1 (/~fmoore/misc/text/mockingbird1.html)
+
+	"mockingbird part kill mockingbird primarily novel
+	 growing up under extraordinary circumstances
+	 southern united states story covers span three
+	 years during"
+
+
+5.	[0.0300]  Mockingbird part 2 (/~fmoore/misc/text/mockingbird2.html)
+
+	"mockingbird part only neighbor puzzles them
+	 mysterious arthur radley nicknamed boo never comes
+	 outside dill another neighbors nephew starts
+	 spending"
+
+
+6.	[0.0149]  Mockingbird part 5 (/~fmoore/misc/text/mockingbird5.html)
+
+	"mockingbird part atticus does not want jem and
+	 scout present tom robinsons trial no seat
+	 available main floor so invitation"
+
+
+----------------------------------------------------------------------
+
+Please enter a query or "stop": hocuspocus thisworks
 Less than K/2 results. Performing thesaurus expansion...
 ----------------------------------------------------------------------
-1.	0.4496854649076144
-	This is the magic file (/~fmoore/misc/text/magictext.html)
-	magic shows up here and title brown
-	beige tan auburn
+1.	[0.4497]  This is the magic file (/~fmoore/misc/text/magictext.html)
 
-2.	0.2017476153076452
-	SMU CSE 5/7337 Spring 2018 text files" (/~fmoore/misc/text/index.php)
-	additional text files support query
-	implementation part part part part part
-	hocuspocus word file testing exact match
-	same words building1txt
+	"magic shows up here and title brown beige tan
+	 auburn"
 
-3.	0.06077895807581538
-	baseball5.txt (/~fmoore/textfiles/baseball5.txt)
-	mann ray people come ray theyll come
-	iowa reasons they cant even fathom
-	theyll turn up your driveway not knowing
+
+2.	[0.2017]  SMU CSE 5/7337 Spring 2018 text files" (/~fmoore/misc/text/index.php)
+
+	"additional text files support query implementation
+	 part part part part part hocuspocus word file
+	 testing exact match same words building1txt"
+
+
+3.	[0.0608]  baseball5.txt (/~fmoore/textfiles/baseball5.txt)
+
+	"mann ray people come ray theyll come iowa reasons
+	 they cant even fathom theyll turn up your driveway
+	 not knowing"
+
 
 ----------------------------------------------------------------------
 
-Please enter a query:stop
+Please enter a query or "stop": stop
 
 Goodbye!
-
-Process finished with exit code 0
+Erics-MacBook-Pro:Web-Crawler ericsmith$ 

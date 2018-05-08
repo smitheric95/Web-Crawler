@@ -1,11 +1,11 @@
-# Web Crawler
+# Web Crawler/Search Engine
 Eric Smith<br>
 CSE 7337 - Info Retrieval and Web Search<br>
 Southern Methodist University<br>
 https://github.com/smitheric95/Web-Crawler<br>
 
 ## About
-This project is a custom web crawler written in [Python 3](https://www.python.org/downloads/release/python-364/). 
+This project is a custom web crawler and search engine written in [Python 3](https://www.python.org/downloads/release/python-364/). 
 It was meant for browsing content on the [course website](https://lyle.smu.edu/~fmoore/) for my 7337 Info Retrieval and Web Search class.
 
 Main external libraries: 

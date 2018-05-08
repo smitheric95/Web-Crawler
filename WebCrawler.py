@@ -32,6 +32,8 @@ class WebCrawler:
         self.graphic_urls = []
         self.all_terms = []  # set of all stemmed terms in all documents
         self.frequency_matrix = []  # Term doc frequency matrix (row=term, col=doc)
+        self.num_pages_crawled = 0  # number of valid pages visited
+        self.num_pages_indexed = 0  # number of pages whose words have been stored
 
         """
         note: the attributes below only contain information from those documents whose 
@@ -44,7 +46,9 @@ class WebCrawler:
 
     # print the report produced from crawling a site
     def __str__(self):
-        report = "\nVisited URLs: " + str(len(self.visited_urls)) \
+        report = "\nPages crawled: " + str(self.num_pages_crawled) \
+                 + "\nPages indexed: " + str(self.num_pages_indexed) \
+                 + "\nVisited URLs: " + str(len(self.visited_urls)) \
                  + "\n\nOutgoing URLs: " + "\n  +  " + "\n  +  ".join(self.outgoing_urls) \
                  + "\n\nBroken URLs: " + "\n  +  " + "\n  +  ".join(self.broken_urls) \
                  + "\n\nGraphic URLs: " + "\n  +  " + "\n  +  ".join(self.graphic_urls) \
@@ -154,13 +158,11 @@ class WebCrawler:
 
         self.url_frontier.append(self.seed_url + "/")
 
-        num_pages_crawled = 0
-
         '''
         pop from the URL frontier while the queue is not empty
         links in queue are valid, full urls
         '''
-        while self.url_frontier and (self.page_limit is None or num_pages_crawled < self.page_limit):
+        while self.url_frontier and (self.page_limit is None or self.num_pages_indexed < self.page_limit):
             # current_page refers to the url of the current page being processed
             current_page = self.url_frontier.pop(0)  # select the next url
 
@@ -190,9 +192,9 @@ class WebCrawler:
 
                     # mark that the page has been visited by adding to visited_url
                     self.visited_urls[current_page] = (current_title, current_doc_id)
-                    num_pages_crawled += 1
+                    self.num_pages_crawled += 1
 
-                    print(str(num_pages_crawled) + ". " + "Visiting: " +
+                    print(str(self.num_pages_crawled) + ". " + "Visiting: " +
                           current_page.replace(self.domain_url, "") + " (" + current_title + ")")
 
                     # if the page is an html document, we need to parse it for links
@@ -213,6 +215,8 @@ class WebCrawler:
                         # store the title and url
                         self.doc_titles[current_doc_id] = current_title
                         self.doc_urls[current_doc_id] = current_page
+
+                        self.num_pages_indexed += 1
 
                         # go through each link in the page
                         for link in soup.find_all('a'):
