@@ -142,7 +142,7 @@ Please enter a query or "stop": smu schedule
 	 activity jan course overview introduction ir chpt"
 	 
 
-2.	[0.2500]  Freeman Moore - SMU Spring 2018 (/~fmoore/index_duplicate.htm)
+2.	[0.2500]  Freeman Moore - SMU Spring 2018 (/~fmoore/)
 
 	"spring freeman moore phd email fmooresmuedu spring
 	 cse fall cse keep looking course calendar latest

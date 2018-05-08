@@ -14,7 +14,6 @@ import hashlib
 import string
 import codecs
 from nltk.stem import PorterStemmer
-import pickle
 
 
 class WebCrawler:
@@ -212,9 +211,12 @@ class WebCrawler:
                         self.doc_words[current_doc_id] = [w for w in content_words
                                                       if w not in self.stop_words and self.word_is_valid(w)]
 
-                        # store the title and url
+                        # store the title
                         self.doc_titles[current_doc_id] = current_title
-                        self.doc_urls[current_doc_id] = current_page
+
+                        # store the url if it hasn't been stored already (to avoid duplicates)
+                        if current_doc_id not in self.doc_urls:
+                            self.doc_urls[current_doc_id] = current_page
 
                         self.num_pages_indexed += 1
 
