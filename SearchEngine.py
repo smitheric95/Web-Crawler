@@ -274,7 +274,7 @@ class SearchEngine(WebCrawler):
                 else:  # prompt user to import from file
                     import_input = "-1"
                     while import_input != "y" and import_input != "n":
-                        import_input = input("Would you like to import the index from disk? (y/n)").lower()
+                        import_input = input("Would you like to import the index from disk? (y/n) ").lower()
 
                     # import the index from file
                     if import_input == "y":
@@ -297,7 +297,7 @@ class SearchEngine(WebCrawler):
                         # ask user if they want to see optional output
                         info_input = "-1"
                         while info_input != "y" and info_input != "n":
-                            info_input = input("Would you like to see info about the pages crawled? (y/n)").lower()
+                            info_input = input("Would you like to see info about the pages crawled? (y/n )").lower()
 
                         # show user crawler duplicates, broken urls, etc
                         if info_input == "y":
@@ -307,6 +307,8 @@ class SearchEngine(WebCrawler):
                         # build tf matrix to be used for clustering
                         self.print_divider()
                         print("Building Term Frequency matrix...", end="")
+                        sys.stdout.flush()
+
                         search_engine.build_frequency_matrix()
                         print(" Done.")
 
@@ -320,7 +322,7 @@ class SearchEngine(WebCrawler):
                         # ask user if they want to see tf matrix
                         tf_input = "-1"
                         while tf_input != "y" and tf_input != "n":
-                            tf_input = input("\nWould you like to see the most frequent terms? (y/n) \n\n").lower()
+                            tf_input = input("\nWould you like to see the most frequent terms? (y/n) ").lower()
 
                         # show user tf matrix
                         if tf_input == "y":
@@ -333,7 +335,7 @@ class SearchEngine(WebCrawler):
                                 print("{: <15} {: >25} {: >25}".format((str(count) + ". " + i), j, k))
                                 count += 1
 
-                            self.print_divider()
+                        self.print_divider()
 
                         print("\nBeginning clustering...")
                         # cluster docs
@@ -342,7 +344,7 @@ class SearchEngine(WebCrawler):
                         # ask user if they want to see clustering
                         c_input = "-1"
                         while c_input != "y" and c_input != "n":
-                            c_input = input("\nDocuments clustered. Would you like to see their clustering? (y/n) \n\n").lower()
+                            c_input = input("\nDocuments clustered. Would you like to see their clustering? (y/n) ").lower()
 
                         # show clustering
                         if c_input == "y":
@@ -351,7 +353,7 @@ class SearchEngine(WebCrawler):
 
                         b_input = "-1"
                         while b_input != "y" and b_input != "n":
-                            b_input = input("\nWould you like to export this index to disk? (y/n)").lower()
+                            b_input = input("\nWould you like to export this index to disk? (y/n) ").lower()
 
                         if b_input == "y":
                             self.save_index()
@@ -381,9 +383,9 @@ class SearchEngine(WebCrawler):
                                 # display results
                                 if len(results) > 0:
                                     for i in range(len(results)):
-                                        print(str(i+1) + ".\t" + str(results[i][0]))
+                                        print("[" + str(i+1) + ".\t" + str(results[i][0]) + "]")
                                         print("\t" + results[i][1] + " (" + results[i][2] + ")")
-                                        print("\t\"" + "\n\t ".join(wrap(results[i][3], 40)) + "\"")
+                                        print("\t\"" + "\n\t ".join(wrap(results[i][3], 50)) + "\"")
                                         print()
                                 else:
                                     print("No results found.")
