@@ -64,7 +64,6 @@ Not allowed: /~fmoore/dontgohere/badfile1.html
 37. Visiting: /~fmoore/misc/text/mockingbird5.html (Mockingbird part 5)
 38. Visiting: /~fmoore/misc/text/magictext.html (This is the magic file)
 39. Visiting: /~fmoore/misc/text/building1.txt (building1.txt)
-error page
 40. Visiting: /~fmoore/misc/text/building2.txt (building2.txt)
 41. Visiting: /~fmoore/textfiles/golf1.txt (golf1.txt)
 42. Visiting: /~fmoore/textfiles/golf2.txt (golf2.txt)

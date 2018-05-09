@@ -198,8 +198,6 @@ class WebCrawler:
 
                     # if the page is an html document, we need to parse it for links
                     if any((current_page.lower().endswith(ext) for ext in ["/", ".html", ".htm", ".php", ".txt"])):
-                        if current_title == "building1.txt":
-                            print("error page")
 
                         # remove contents of title tag
                         [s.extract() for s in soup('title')]
